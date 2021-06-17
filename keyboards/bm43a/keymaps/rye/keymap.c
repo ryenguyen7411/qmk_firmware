@@ -34,6 +34,8 @@ enum custom_keycodes {
   MC_VIM_08,
   MC_VIM_09,
   MC_VIM_10,
+  MC_VIM_12,
+  MC_VIM_13,
 };
 
 enum tap_dances {
@@ -57,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LALT, KC_LGUI, LT(FN3, KC_SPC), LT(FN4, KC_SPC), KC_LEFT, KC_DOWN, KC_UP, KC_RGHT
   ),
   [FN1] = LAYOUT(
-    _______, _______, _______, TD(TD_VIM_11), MC_VIM_10, _______, _______, _______, _______, _______, _______, KC_DEL,
+    _______, _______, _______, TD(TD_VIM_11), MC_VIM_10, _______, _______, MC_VIM_12, MC_VIM_13, KC_LCBR, KC_RCBR, KC_DEL,
     _______, KC_WH_R, KC_WH_U, KC_WH_D, KC_WH_L, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, C(KC_SPC),
     _______, _______, _______, KC_BTN1, KC_BTN2, _______, _______, _______, C(KC_LEFT), C(KC_RIGHT), C(KC_UP),
     _______, _______, _______, _______, _______, _______, _______, _______, _______
@@ -260,9 +262,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_TAP(X_COMM) "fb");
       }
       break;
+    case MC_VIM_05:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LCTL("c") SS_TAP(X_ESC));
+      }
+      break;
     case MC_VIM_06:
       if (record->event.pressed) {
         SEND_STRING(SS_TAP(X_COMM) "fx");
+      }
+      break;
+    case MC_VIM_07:
+      if (record->event.pressed) {
+        SEND_STRING(":vs" SS_TAP(X_ENT));
+      }
+      break;
+    case MC_VIM_08:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LCTL("w") "q");
       }
       break;
     case MC_VIM_09:
@@ -273,6 +290,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case MC_VIM_10:
       if (record->event.pressed) {
         SEND_STRING(SS_TAP(X_COMM) "w");
+      }
+      break;
+    case MC_VIM_12:
+      if (record->event.pressed) {
+        SEND_STRING("5j");
+      }
+      break;
+    case MC_VIM_13:
+      if (record->event.pressed) {
+        SEND_STRING(SS_TAP("5k"));
       }
       break;
     default:
