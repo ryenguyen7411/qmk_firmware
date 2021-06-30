@@ -39,12 +39,6 @@ enum custom_keycodes {
 enum tap_dances {
   TD_COLN,
   TD_QUOT,
-  TD_MINS,
-  TD_PLUS,
-  TD_LBRC,
-  TD_RBRC,
-  TD_COMM,
-  TD_DOT,
 
   TD_VIM_12,
 };
@@ -57,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LALT, KC_LGUI, LT(FN3, KC_SPC), LT(FN4, KC_SPC), KC_LEFT, KC_DOWN, KC_UP, KC_RGHT
   ),
   [FN1] = LAYOUT(
-    _______, _______, _______, TD(TD_VIM_12), MC_VIM_11, _______, _______, _______, _______, KC_LCBR, KC_RCBR, KC_DEL,
+    _______, _______, TD(TD_VIM_12), MC_VIM_11, _______, _______, _______, _______, _______, KC_LCBR, KC_RCBR, KC_DEL,
     _______, KC_WH_R, KC_WH_U, KC_WH_D, KC_WH_L, _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, C(KC_SPC),
     _______, _______, _______, KC_BTN1, KC_BTN2, _______, _______, _______, C(KC_LEFT), C(KC_RIGHT), C(KC_UP),
     _______, _______, _______, _______, _______, _______, _______, _______, _______
@@ -114,110 +108,9 @@ void tapdance_quot_reset(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-void tapdance_mins_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code(KC_MINS);
-  } else {
-    register_code16(KC_UNDS);
-  }
-}
-
-void tapdance_mins_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code(KC_MINS);
-  } else {
-    unregister_code16(KC_UNDS);
-  }
-}
-
-void tapdance_plus_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code(KC_EQL);
-  } else {
-    register_code16(KC_PLUS);
-  }
-}
-
-void tapdance_plus_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code(KC_EQL);
-  } else {
-    unregister_code16(KC_PLUS);
-  }
-}
-
-void tapdance_lbrc_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code(KC_LBRC);
-  } else {
-    register_code16(KC_LCBR);
-  }
-}
-
-void tapdance_lbrc_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code(KC_LBRC);
-  } else {
-    unregister_code16(KC_LCBR);
-  }
-}
-
-void tapdance_rbrc_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code(KC_RBRC);
-  } else {
-    register_code16(KC_RCBR);
-  }
-}
-
-void tapdance_rbrc_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code(KC_RBRC);
-  } else {
-    unregister_code16(KC_RCBR);
-  }
-}
-
-void tapdance_comm_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code(KC_COMM);
-  } else {
-    register_code16(KC_LT);
-  }
-}
-
-void tapdance_comm_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code(KC_COMM);
-  } else {
-    unregister_code16(KC_LT);
-  }
-}
-
-void tapdance_dot_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    register_code(KC_DOT);
-  } else {
-    register_code16(KC_GT);
-  }
-}
-
-void tapdance_dot_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    unregister_code(KC_DOT);
-  } else {
-    unregister_code16(KC_GT);
-  }
-}
-
 void tapdance_vim_12_finished(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count > 1) {
-    register_code(KC_COMM);
-    unregister_code(KC_COMM);
-    register_code(KC_Q);
-    unregister_code(KC_Q);
-    register_code(KC_Q);
-    unregister_code(KC_Q);
+    SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "qq");
   }
 }
 
@@ -228,12 +121,6 @@ void tapdance_vim_12_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_COLN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_coln_finished, tapdance_coln_reset),
   [TD_QUOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_quot_finished, tapdance_quot_reset),
-  [TD_MINS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_mins_finished, tapdance_mins_reset),
-  [TD_PLUS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_plus_finished, tapdance_plus_reset),
-  [TD_LBRC] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_lbrc_finished, tapdance_lbrc_reset),
-  [TD_RBRC] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_rbrc_finished, tapdance_rbrc_reset),
-  [TD_COMM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_comm_finished, tapdance_comm_reset),
-  [TD_DOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_dot_finished, tapdance_dot_reset),
   [TD_VIM_12] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_vim_12_finished, tapdance_vim_12_reset),
 };
 
@@ -242,22 +129,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case MC_VIM_01:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_COMM) "ff");
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "ff");
       }
       break;
     case MC_VIM_02:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_COMM) "fp");
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "fp");
       }
       break;
     case MC_VIM_03:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_COMM) "fg");
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "fg");
       }
       break;
     case MC_VIM_04:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_COMM) "fb");
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "fb");
       }
       break;
     case MC_VIM_05:
@@ -267,17 +154,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case MC_VIM_06:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_COMM) "fx");
-      }
-      break;
-    case MC_VIM_07:
-      if (record->event.pressed) {
-        SEND_STRING(":vs" SS_TAP(X_ENT));
-      }
-      break;
-    case MC_VIM_08:
-      if (record->event.pressed) {
-        SEND_STRING(SS_LCTL("w") "q");
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "fx");
       }
       break;
     case MC_VIM_07:
@@ -297,7 +174,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case MC_VIM_11:
       if (record->event.pressed) {
-        SEND_STRING(SS_TAP(X_COMM) "w");
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_COMM) "w");
       }
       break;
     default:
