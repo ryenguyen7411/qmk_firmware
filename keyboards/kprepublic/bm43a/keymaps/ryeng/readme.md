@@ -77,7 +77,7 @@
 - S_02 = Ctrl + ▶
 - S_03 = Ctrl + ▲
 - S_05 = Ctrl + Space (switch Input language)
-- S_06 = Cmd + Option + D (toggle Dock)
+- S_06 = Ctrl + F3 (show Dock)
 - V_09: Vim prev block
 - V_10: Vim next block
 - V_11: Vim Save
@@ -103,3 +103,10 @@
 
 ### MACRO GAME
 - G_01: Shootjump
+
+## FLASHING
+
+```
+$ qmk compile -kb kprepublic/bm43a -km ryeng
+$ qmk flash -kb kprepublic/bm43a -km ryeng
+```
