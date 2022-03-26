@@ -84,10 +84,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Mouse Keys
 #define MOUSEKEY_DELAY 0
 #define MOUSEKEY_INTERVAL 15
-#define MOUSEKEY_MAX_SPEED 4
+#define MOUSEKEY_MAX_SPEED 10
 #define MOUSEKEY_TIME_TO_MAX 15
 
 #define MOUSEKEY_WHEEL_DELAY 0
-#define MOUSEKEY_WHEEL_INTERVAL 90
+#define MOUSEKEY_WHEEL_INTERVAL 60
 #define MOUSEKEY_WHEEL_MAX_SPEED 3
-#define MOUSEKEY_WHEEL_TIME_TO_MAX 20
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 15
+
+// Tapping Term
+#define TAPPING_TERM 150

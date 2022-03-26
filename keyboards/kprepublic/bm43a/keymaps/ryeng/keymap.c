@@ -15,6 +15,19 @@
  */
 #include QMK_KEYBOARD_H
 
+typedef enum {
+  TD_NONE,
+  TD_UNKNOWN,
+  TD_SINGLE_TAP,
+  TD_SINGLE_HOLD,
+  TD_DOUBLE_TAP
+} td_state_t;
+
+typedef struct {
+  bool is_press_action;
+  td_state_t state;
+} td_tap_t;
+
 enum rye_bm43_layers {
   BASE,
   FN1,
@@ -41,18 +54,23 @@ enum custom_keycodes {
   MC_G_01,
 };
 
+static td_tap_t ql_tap_state = {
+  .is_press_action = true,
+  .state = TD_NONE
+};
+
 enum tap_dances {
   TD_COLN,
   TD_QUOT,
-
   TD_VIM_12,
+  TD_TOGGLE_FN1,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT(
     KC_GRV, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
-    LT(FN1, KC_ESC), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, LT(FN2, KC_ENTER),
-    KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_DOT, _______, _______,
+    TD(TD_TOGGLE_FN1), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, LT(FN2, KC_ENTER),
+    KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_DOT, _______, KC_RGUI,
     KC_LCTL, KC_LALT, KC_LGUI, LT(FN3, KC_SPC), LT(FN4, KC_SPC), KC_LEFT, KC_DOWN, KC_UP, KC_RGHT
   ),
   [FN1] = LAYOUT(
@@ -86,6 +104,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 };
+
+td_state_t cur_dance(qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    if (!state->pressed) return TD_SINGLE_TAP;
+    else return TD_SINGLE_HOLD;
+  } else if (state->count == 2) return TD_DOUBLE_TAP;
+  else return TD_UNKNOWN;
+}
 
 void tapdance_coln_finished(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
@@ -128,11 +154,42 @@ void tapdance_vim_12_finished(qk_tap_dance_state_t *state, void *user_data) {
 void tapdance_vim_12_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
+
+void tapdance_toggle_fn1_finished(qk_tap_dance_state_t *state, void *user_data) {
+  ql_tap_state.state = cur_dance(state);
+  switch (ql_tap_state.state) {
+    case TD_SINGLE_TAP:
+      tap_code(KC_ESC);
+      break;
+    case TD_SINGLE_HOLD:
+      layer_on(FN1);
+      break;
+    case TD_DOUBLE_TAP:
+      // Toggle layer
+      if (layer_state_is(FN1)) {
+        layer_off(FN1);
+      } else {
+        layer_on(FN1);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+void tapdance_toggle_fn1_reset(qk_tap_dance_state_t *state, void *user_data) {
+  if (ql_tap_state.state == TD_SINGLE_TAP || ql_tap_state.state == TD_SINGLE_HOLD) {
+    layer_off(FN1);
+  }
+  ql_tap_state.state = TD_NONE;
+}
+
 // All tap dance functions would go here.
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_COLN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_coln_finished, tapdance_coln_reset),
   [TD_QUOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_quot_finished, tapdance_quot_reset),
   [TD_VIM_12] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_vim_12_finished, tapdance_vim_12_reset),
+  [TD_TOGGLE_FN1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_toggle_fn1_finished, tapdance_toggle_fn1_reset),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
