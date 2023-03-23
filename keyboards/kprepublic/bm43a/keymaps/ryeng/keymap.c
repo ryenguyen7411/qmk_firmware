@@ -22,7 +22,7 @@ enum rye_bm43_layers {
   FN3,
   FN4,
   BASE_FN, // Use for active Base layer inside Fn layer
-  MACROGAME,
+  /* MACROGAME, */
 };
 
 enum custom_keycodes {
@@ -30,7 +30,6 @@ enum custom_keycodes {
   MC_VI02,
   MC_VI03,
   MC_VI04,
-  MC_VI05,
   MC_VI06,
   MC_VI07,
   MC_VI08,
@@ -39,7 +38,9 @@ enum custom_keycodes {
   MC_VI16,
   MC_VI18,
   MC_VI19,
+  MC_VI20,
   MC_G01,
+  MC_S07,
 };
 
 enum tap_dances {
@@ -119,9 +120,6 @@ void tapdance_toggle_dock_fn2(qk_tap_dance_state_t *state, void *user_data) {
     unregister_code(KC_LCTL);
   } else if (td_tap_state.state == TD_SINGLE_HOLD) {
     tap_code(KC_ENT);
-  } else if (td_tap_state.state == TD_DOUBLE_TAP) {
-    if (layer_state_is(FN2)) layer_off(FN2);
-    else layer_on(FN2);
   }
 }
 
@@ -148,9 +146,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       case MC_VI04:
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "b");
         break;
-      case MC_VI05:
-        SEND_STRING(SS_LCTL("c") SS_TAP(X_ESC));
-        break;
       case MC_VI06:
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "k");
         break;
@@ -176,8 +171,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       case MC_VI19:
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "p");
         break;
+      case MC_VI20:
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "a");
+        break;
       case MC_G01:
         SEND_STRING("kj");
+        break;
+      case MC_S07:
+        SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
         break;
       default:
         break;
@@ -194,14 +195,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LALT, KC_LGUI, KC_FN3, KC_FN4, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT
   ),
   [FN1] = LAYOUT(
-    KC___, KC___, TD_VI12, MC_VI11, KC___, KC___, KC___, KC___, C(KC_SPC), KC___, KC___, KC_DEL,
+    KC___, KC_ACL0, TD_VI12, MC_VI11, KC___, KC___, KC___, KC___, C(KC_SPC), KC___, KC___, KC_DEL,
     KC___, KC_WH_R, KC_WH_U, KC_WH_D, KC_WH_L, KC___, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, TD_FN2_DOCK,
-    KC_FN_LSFT, KC___, KC___, KC_BTN1, KC_BTN2, KC___, KC___, KC___, C(KC_LEFT), C(KC_RIGHT), C(KC_UP),
-    KC_FN_LCTL, KC_FN_LALT, KC___, KC_ACL0, KC___, KC___, KC___, KC___, KC___
+    KC___, KC___, KC___, KC_BTN1, KC_BTN2, KC___, KC___, KC___, C(KC_LEFT), C(KC_RIGHT), C(KC_UP),
+    KC___, KC___, KC___, KC_LSFT, KC___, KC___, KC___, KC___, KC___
   ),
   [FN2] = LAYOUT(
     KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
-    KC___, DF(MACROGAME), KC___, KC___, KC_BRID, KC_BRIU, KC___, KC_MUTE, KC_VOLD, KC_VOLU, KC___,
+    KC___, KC___, KC___, MC_S07, KC_BRID, KC_BRIU, KC___, KC_MUTE, KC_VOLD, KC_VOLU, KC___,
     KC___, RESET, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___,
     KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___
   ),
@@ -212,8 +213,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___
   ),
   [FN4] = LAYOUT(
-    KC___, KC___, KC___, KC___, MC_VI13, KC___, KC___, KC___, KC___, MC_VI18, MC_VI19, KC_F12,
-    MC_VI05, KC___, KC___, KC___, MC_VI16, MC_VI07, KC___, MC_VI03, MC_VI06, MC_VI02, MC_VI01,
+    KC___, KC___, KC___, KC___, MC_VI13, MC_VI20, KC___, KC___, KC___, MC_VI18, MC_VI19, KC_F12,
+    KC___, KC___, KC___, KC___, MC_VI16, MC_VI07, KC___, MC_VI03, MC_VI06, MC_VI02, MC_VI01,
     KC___, KC___, KC___, KC___, KC___, MC_VI04, KC___, KC___, KC___, MC_VI08, G(KC_V),
     KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___
   ),
@@ -223,10 +224,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC___, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_DOT, KC___, KC___,
     KC___, KC___, KC___, KC___, KC___, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT
   ),
-  [MACROGAME] = LAYOUT(
-    KC_ESC, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC_MUTE,
-    MO(FN1), DF(BASE), KC___, KC___, KC___, KC___, KC___, KC___, MC_G01, KC___, KC___,
-    KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___,
-    KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___
-  ),
+  /* [MACROGAME] = LAYOUT( */
+  /*   KC_ESC, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC_MUTE, */
+  /*   MO(FN1), DF(BASE), KC___, KC___, KC___, KC___, KC___, KC___, MC_G01, KC___, KC___, */
+  /*   KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, */
+  /*   KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___, KC___ */
+  /* ), */
 };

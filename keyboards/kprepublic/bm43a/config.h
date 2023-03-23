@@ -82,14 +82,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NO_USB_STARTUP_CHECK
 
 // Mouse Keys
-#define MK_COMBINED 1
-#define MK_C_OFFSET_0 2
-#define MK_C_INTERVAL_0 16
+#define MK_COMBINED
 
 #define MOUSEKEY_DELAY 0
 #define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_MAX_SPEED 8
-#define MOUSEKEY_TIME_TO_MAX 15
+#define MOUSEKEY_MAX_SPEED 5
+#define MOUSEKEY_TIME_TO_MAX 10
 
 #define MOUSEKEY_WHEEL_DELAY 0
 #define MOUSEKEY_WHEEL_INTERVAL 60
