@@ -16,27 +16,32 @@
 - FN2 Tap = Space
 - FN3 Tap = Space
 - FN4 Tap = Enter
-- MOUSE Tap = FN1 on, Shift + MOUSE = FN1 off (for mouse key)
+- MOUSE Tap = FN1 on
+    - Shift + MOUSE = FN1 off
+    - Ctrl + MOUSE = FN1 off
 
 ## FN1 LAYOUT
 
 .-----------------------------.           .-----------------------------.
-|     |SlowM|VI_12|VI_11|Clk ◀|           |Clk ▶|S_06 |S_05 | Del | <-- |
+|     |SlowM|VI12 |VI11 |Clk ◀|           |Clk ▶| S06 | S05 | Del | <-- |
 |-----------------------------|           |-----------------------------|
 | Cmd |Scr ◀|Scr ▼|Scr ▲|Scr ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |     |     |     |     |S_01 |S_02 |S_03 |
+|     |     |     |     |     |     |     |Scr01| S03 | S01 | S02 |Scr02|
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
 
-- S_01 = Ctrl + ◀
-- S_02 = Ctrl + ▶
-- S_03 = Ctrl + ▲
-- S_05 = Ctrl + Space (switch Input language)
-- S_06 = Ctrl + F3 (show Dock)
-- VI_11: Vim Save
-- VI_12: Vim Quit
+- S01 = Ctrl + ◀
+- S02 = Ctrl + ▶
+- S03 = Ctrl + ▲
+- S05 = Ctrl + Space (switch Input language)
+- S06 = Ctrl + F3 (show Dock)
+- VI11: Vim Save
+- VI12: Vim Quit
+- Scr01: Ctrl + Shift + [ (move mouse to screen left)
+- Scr02: Ctrl + Shift + [ (move mouse to screen right)
+    > Integrate with BetterTouchTool to move window to screen left/right
 
 ## FN2 LAYOUT
 
@@ -45,7 +50,7 @@
 |-----------------------------|           |-----------------------------|
 | Cmd |Shift| Alt |  ~  | Tab |           |  -  |  =  |  ;  |  '  |  \  |
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |     |     |  [  |  ,  |  .  |  /  |  ]  |
+|     |     |     |     |     |     |     | \[  |  ,  |  .  |  /  | \]  |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
@@ -53,42 +58,42 @@
 ## FN3 LAYOUT
 
 .-----------------------------.           .-----------------------------.
-|     |     |     |VI_13|     |           |VI_05|     |VI_19| F11 | F12 |
+|     |     |     |VI13 |     |           |VI05 |     |VI19 | F11 | F12 |
 |-----------------------------|           |-----------------------------|
-|     |     |     |     |VI_16|           |VI_07|VI_03|VI_06|VI_02|VI_01|
+|     |     |     |     |VI16 |           |VI07 |VI03 |VI06 |VI02 |VI01 |
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |     |     |VI_04|     |     |     |S_04 |
+|     |     |     |     |     |     |     |VI04 |     |     |     | S04 |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
 
-- VI_01: Vim Find Files
-- VI_02: Vim Project
-- VI_03: Vim Live Grep
-- VI_04: Vim Buffers
-- VI_05: Vim Resume picker
-- VI_06: Vim File Browser
-- VI_07: Vim Emmet Tab
-- VI_13: Vim DiffviewOpen
-- VI_16: Vim DiffviewFileHistory
-- VI_18: Vim Organize Import
-- VI_19: Vim Notes
-- S_04: Cmd + V
+- VI01: Vim Find Files
+- VI02: Vim Project
+- VI03: Vim Live Grep
+- VI04: Vim Buffers
+- VI05: Vim Resume picker
+- VI06: Vim File Browser
+- VI07: Vim Emmet Tab
+- VI13: Vim DiffviewOpen
+- VI16: Vim DiffviewFileHistory
+- VI18: Vim Organize Import
+- VI19: Vim Notes
+- S04: Cmd + V
 
 ## FN4 LAYOUT
 
 .-----------------------------.           .-----------------------------.
 | F1  | F2  | F3  | F4  | F5  |           | F6  | F7  | F8  | F9  | F10 |
 |-----------------------------|           |-----------------------------|
-|     |     |S_07 |Bri▼ |Bri▲ |           |     |Mute |Vol▼ |Vol▲ |     |
+|     |     | S07 |Bri▼ |Bri▲ |           |     |Mute |Vol▼ |Vol▲ |     |
 |-----------------------------------------------------------------------|
-|     |     |     |S_08 |     |     |RESET|     |     |     |     |     |
+|     |     |     | S08 |     |     |RESET|     |     |     |     |     |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
 
-- S_07 = Chrome: clear console
-- S_08 = HTML Inspect Element
+- S07 = Chrome: clear console
+- S08 = HTML Inspect Element
 
 
 # FLASHING

@@ -39,6 +39,8 @@ enum custom_keycodes {
   MC_S04,
   MC_S07,
   MC_S09,
+  MC_S10,
+  MC_S11,
 };
 
 enum tap_dances {
@@ -61,6 +63,8 @@ enum tap_dances {
 #define PEEK C(KC_UP)
 #define HTML G(S(KC_C))
 #define DOCK C(KC_F3)
+#define SCREEN1 G(S(KC_LBRC))
+#define SCREEN2 G(S(KC_RBRC))
 
 #define TD_COLN TD(TD_KC_COLN)
 #define TD_QUOT TD(TD_KC_QUOT)
@@ -155,7 +159,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FN1] = LAYOUT(
     _______,KC_ACL0,TD_VI12,MC_VI11,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
     KC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
-    _______,_______,_______,_______,_______,_______,_______,_______,_______,WIN_L,  WIN_R,  PEEK,
+    _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN2] = LAYOUT(
@@ -200,7 +204,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "k");
         break;
       case MC_VI07:
-        SEND_STRING(",g");
+        SEND_STRING(SS_LCTL("j"));
         break;
       case MC_VI11:
         if (keyboard_report->mods & MOD_MASK_GUI) {
@@ -225,7 +229,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
         break;
       case MC_S09:
-        if (get_mods() & MOD_MASK_SHIFT) {
+        if ((get_mods() & MOD_MASK_SHIFT) || (get_mods() & MOD_MASK_CTRL)) {
           layer_off(_FN1);
         } else {
           layer_on(_FN1);
