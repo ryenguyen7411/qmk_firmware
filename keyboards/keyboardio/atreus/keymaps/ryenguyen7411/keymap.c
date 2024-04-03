@@ -36,9 +36,10 @@ enum custom_keycodes {
   MC_VI13,
   MC_VI16,
   MC_VI19,
-  MC_S04,
-  MC_S07,
-  MC_S09,
+  PEEK,
+  SCREEN1,
+  CLEAR,
+  MOUSE,
   MC_S10,
   MC_S11,
 };
@@ -60,11 +61,10 @@ enum tap_dances {
 #define LANG C(KC_SPACE)
 #define WIN_L C(KC_LEFT)
 #define WIN_R C(KC_RIGHT)
-#define PEEK C(KC_UP)
 #define HTML G(S(KC_C))
 #define DOCK C(KC_F3)
-#define SCREEN1 G(S(KC_LBRC))
 #define SCREEN2 G(S(KC_RBRC))
+#define PASTE G(KC_V)
 
 #define TD_COLN TD(TD_KC_COLN)
 #define TD_QUOT TD(TD_KC_QUOT)
@@ -153,7 +153,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MC_S09, KC_B,   KC_N,   KC_M,   _______,CTRLESC,
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN1,    KC_SPC, FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
@@ -171,12 +171,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FN3] = LAYOUT(
     _______,_______,_______,MC_VI13,_______,                MC_VI05,_______,MC_VI19,KC_F11, KC_F12,
     _______,_______,_______,_______,MC_VI16,                MC_VI07,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
-    _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,MC_S04,
+    _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN4] = LAYOUT(
     KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                  KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10,
-    _______,_______,MC_S07, KC_BRID,KC_BRIU,                _______,KC_MUTE,KC_VOLD,KC_VOLU,_______,
+    _______,_______,CLEAR,  KC_BRID,KC_BRIU,                _______,KC_MUTE,KC_VOLD,KC_VOLU,_______,
     _______,_______,_______,HTML   ,_______,_______,QK_BOOT,_______,_______,_______,_______,_______,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -222,14 +222,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       case MC_VI19:
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "p");
         break;
-      case MC_S04:
-        SEND_STRING(SS_LCMD("v"));
+      case PEEK:
+        if ((keyboard_report->mods & MOD_MASK_GUI) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
+          SEND_STRING("n");
+        } else {
+          register_code(KC_LCTL);
+          register_code(KC_UP);
+          unregister_code(KC_UP);
+          unregister_code(KC_LCTL);
+        }
         break;
-      case MC_S07:
+      case SCREEN1:
+        if ((keyboard_report->mods & MOD_MASK_GUI) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
+          SEND_STRING("b");
+        } else {
+          register_code(KC_LCMD);
+          register_code(KC_LSFT);
+          register_code(KC_LBRC);
+          unregister_code(KC_LBRC);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LCMD);
+        }
+        break;
+      case CLEAR:
         SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
         break;
-      case MC_S09:
-        if ((get_mods() & MOD_MASK_SHIFT) || (get_mods() & MOD_MASK_CTRL)) {
+      case MOUSE:
+        if ((keyboard_report->mods & MOD_MASK_SHIFT) || (keyboard_report->mods & MOD_MASK_CTRL)) {
           layer_off(_FN1);
         } else {
           layer_on(_FN1);
