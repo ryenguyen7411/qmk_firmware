@@ -129,23 +129,27 @@ tap_dance_action_t tap_dance_actions[] = {
 
 const key_override_t kc_mouseslow_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
 const key_override_t kc_mouseclick_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
+const key_override_t kc_mousewhr_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
+const key_override_t kc_mouseright_ctrl_key_override = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
+const key_override_t kc_mouseright_cmd_key_override = ko_make_basic(MOD_MASK_GUI, KC_MS_R, G(KC_L));
+const key_override_t kc_mouserightclick_key_override = ko_make_basic(MOD_MASK_GUI | MOD_MASK_SHIFT, KC_BTN2, S(G(KC_Y)));
 const key_override_t kc7_key_override = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
 const key_override_t kc8_key_override = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
 const key_override_t kc9_key_override = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
 const key_override_t kc0_key_override = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
-const key_override_t kc_mouseright_ctrl_key_override = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
-const key_override_t kc_mouseright_cmd_key_override = ko_make_basic(MOD_MASK_GUI, KC_MS_R, G(KC_L));
 
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]){
     &kc_mouseslow_key_override,
     &kc_mouseclick_key_override,
+    &kc_mousewhr_key_override,
+    &kc_mouseright_ctrl_key_override,
+    &kc_mouseright_cmd_key_override,
+    &kc_mouserightclick_key_override,
     &kc7_key_override,
     &kc8_key_override,
     &kc9_key_override,
     &kc0_key_override,
-    &kc_mouseright_ctrl_key_override,
-    &kc_mouseright_cmd_key_override,
     NULL // Null terminate the array of overrides!
 };
 
