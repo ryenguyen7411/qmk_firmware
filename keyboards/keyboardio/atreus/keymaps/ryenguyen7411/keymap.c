@@ -40,6 +40,7 @@ enum custom_keycodes {
   SCREEN1,
   CLEAR,
   MOUSE,
+  MC_RCMD,
   MC_S10,
   MC_S11,
 };
@@ -127,29 +128,35 @@ tap_dance_action_t tap_dance_actions[] = {
   [TD_MC_FN2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_toggle_fn2_finished, tapdance_toggle_fn2_reset),
 };
 
-const key_override_t kc_mouseslow_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
-const key_override_t kc_mouseclick_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
-const key_override_t kc_mousewhr_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
-const key_override_t kc_mouseright_ctrl_key_override = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
-const key_override_t kc_mouseright_cmd_key_override = ko_make_basic(MOD_MASK_GUI, KC_MS_R, G(KC_L));
-const key_override_t kc_mouserightclick_key_override = ko_make_basic(MOD_MASK_GUI | MOD_MASK_SHIFT, KC_BTN2, S(G(KC_Y)));
-const key_override_t kc7_key_override = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
-const key_override_t kc8_key_override = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
-const key_override_t kc9_key_override = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
-const key_override_t kc0_key_override = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
+const key_override_t kc_cmd_s_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
+const key_override_t kc_cmd_d_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
+const key_override_t kc_cmd_f_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
+const key_override_t kc_cmd_k_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K));
+const key_override_t kc_cmd_l_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L));
+const key_override_t kc_cmd_w_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
+const key_override_t kc_cmd_t_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
+const key_override_t kc_cmd_y_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
+const key_override_t kc_ctrl_l_key_override = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
+const key_override_t kc_7_key_override = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
+const key_override_t kc_8_key_override = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
+const key_override_t kc_9_key_override = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
+const key_override_t kc_0_key_override = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]){
-    &kc_mouseslow_key_override,
-    &kc_mouseclick_key_override,
-    &kc_mousewhr_key_override,
-    &kc_mouseright_ctrl_key_override,
-    &kc_mouseright_cmd_key_override,
-    &kc_mouserightclick_key_override,
-    &kc7_key_override,
-    &kc8_key_override,
-    &kc9_key_override,
-    &kc0_key_override,
+    &kc_cmd_s_key_override,
+    &kc_cmd_d_key_override,
+    &kc_cmd_f_key_override,
+    &kc_cmd_k_key_override,
+    &kc_cmd_l_key_override,
+    &kc_cmd_w_key_override,
+    &kc_cmd_t_key_override,
+    &kc_cmd_y_key_override,
+    &kc_ctrl_l_key_override,
+    &kc_7_key_override,
+    &kc_8_key_override,
+    &kc_9_key_override,
+    &kc_0_key_override,
     NULL // Null terminate the array of overrides!
 };
 
@@ -157,12 +164,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   MC_VI11,MOUSE,  KC_B,   KC_N,   KC_M,   FN2,    CTRLESC,
-    KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   FN2,    CTRLESC,
+    KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN1,    FN2,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
     _______,KC_ACL0,TD_VI12,MC_VI11,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
-    KC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
+    MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
     _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -186,7 +193,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
+static bool is_l_cmd_pressed = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case KC_LCMD:
+      is_l_cmd_pressed = record->event.pressed;
+      break;
+    case MC_RCMD:
+      if (is_l_cmd_pressed && record->event.pressed) {
+        register_code(KC_A);
+        return false;
+      } else if (is_l_cmd_pressed && !record->event.pressed) {
+        unregister_code(KC_A);
+        return false;
+      }
+      break;
+    default:
+      break;
+  }
+
   if (record->event.pressed) {
     switch (keycode) {
       case MC_VI01:
