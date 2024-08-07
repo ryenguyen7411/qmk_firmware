@@ -54,6 +54,7 @@ enum tap_dances {
 
 #define FN1 LT(_FN1, KC_SPACE)
 #define FN2 TD(TD_MC_FN2)
+#define FN2TMP LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
 
@@ -164,8 +165,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   FN2,    CTRLESC,
-    KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN1,    FN2,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   FN2,    MOUSE,  KC_B,   KC_N,   KC_M,   FN2TMP, CTRLESC,
+    KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN1,    KC_SPC, FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
     _______,KC_ACL0,TD_VI12,MC_VI11,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
@@ -280,8 +281,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       case MOUSE:
         if ((keyboard_report->mods & MOD_MASK_SHIFT) || (keyboard_report->mods & MOD_MASK_CTRL)) {
           layer_off(_FN1);
+          layer_off(_FN2);
         } else {
           layer_on(_FN1);
+          layer_off(_FN2);
         }
         break;
       default:
