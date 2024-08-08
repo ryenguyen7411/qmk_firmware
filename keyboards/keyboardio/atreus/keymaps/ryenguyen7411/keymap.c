@@ -16,6 +16,7 @@
 
 #include QMK_KEYBOARD_H
 
+// Layer Definitions
 enum rye_keyboardio_atreus_layers {
   _BASE,
   _FN1,
@@ -24,6 +25,7 @@ enum rye_keyboardio_atreus_layers {
   _FN4,
 };
 
+// Custom Keycodes
 enum custom_keycodes {
   MC_VI01 = SAFE_RANGE,
   MC_VI02,
@@ -45,6 +47,7 @@ enum custom_keycodes {
   MC_S11,
 };
 
+// Tap Dance Definitions
 enum tap_dances {
   TD_KC_COLN,
   TD_KC_QUOT,
@@ -54,7 +57,7 @@ enum tap_dances {
 
 #define FN1 LT(_FN1, KC_SPACE)
 #define FN2 TD(TD_MC_FN2)
-#define FN2TMP LT(_FN2, KC_SPACE)
+#define FN2_LT LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
 
@@ -72,6 +75,7 @@ enum tap_dances {
 #define TD_QUOT TD(TD_KC_QUOT)
 #define TD_VI12 TD(TD_MC_VI12)
 
+// Tap Dance States
 typedef enum {
   TD_NONE,
   TD_UNKNOWN,
@@ -122,6 +126,7 @@ void tapdance_toggle_fn2_reset(tap_dance_state_t *state, void *user_data) {
   td_tap_state.state = TD_NONE;
 }
 
+// Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
   [TD_KC_COLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
   [TD_KC_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
@@ -165,7 +170,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   FN2,    MOUSE,  KC_B,   KC_N,   KC_M,   FN2TMP, CTRLESC,
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   FN2,    MOUSE,  KC_B,   KC_N,   KC_M,   FN2_LT, CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN1,    KC_SPC, FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
