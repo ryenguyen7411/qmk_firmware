@@ -49,14 +49,14 @@ enum custom_keycodes {
 
 // Tap Dance Definitions
 enum tap_dances {
-  TD_KC_COLN,
-  TD_KC_QUOT,
-  TD_MC_VI12,
-  TD_MC_FN2,
+  TD_SCLN,
+  TD_QUOT,
+  TD_VI12,
+  TD_FN2,
 };
 
 #define FN1 LT(_FN1, KC_SPACE)
-#define FN2 TD(TD_MC_FN2)
+#define FN2 TD(TD_FN2)
 #define FN2_LT LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
@@ -71,11 +71,12 @@ enum tap_dances {
 #define SCREEN2 G(S(KC_RBRC))
 #define PASTE G(KC_V)
 
-#define TD_COLN TD(TD_KC_COLN)
-#define TD_QUOT TD(TD_KC_QUOT)
-#define TD_VI12 TD(TD_MC_VI12)
+#define TD_COLN TD(TD_SCLN)
+#define TD_QUOT TD(TD_QUOT)
+#define TD_VI12 TD(TD_VI12)
 
-// Tap Dance States
+// TAP DANCE -----------------------------------------------------------------
+
 typedef enum {
   TD_NONE,
   TD_UNKNOWN,
@@ -92,35 +93,29 @@ static td_state_t td_tap_state = {
   .state = TD_NONE
 };
 
-td_tap_t tapdance_get_state(tap_dance_state_t *state) {
+td_tap_t td_get_state(tap_dance_state_t *state) {
   if (state->count == 1) {
     if (!state->pressed) return TD_SINGLE_TAP;
     else return TD_SINGLE_HOLD;
-  } else if (state->count == 2) {
-    return TD_DOUBLE_TAP;
   }
-  return TD_UNKNOWN;
+  return TD_DOUBLE_TAP;
 }
 
-void tapdance_vi12(tap_dance_state_t *state, void *user_data) {
+void td_vi12(tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) tap_code(KC_E);
   else SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "qq");
 }
 
-void tapdance_toggle_fn2_finished(tap_dance_state_t *state, void *user_data) {
-  td_tap_state.state = tapdance_get_state(state);
+void td_fn2_finished(tap_dance_state_t *state, void *user_data) {
+  td_tap_state.state = td_get_state(state);
   if (td_tap_state.state == TD_SINGLE_TAP) {
-    if (layer_state_is(_FN2)) layer_off(_FN2);
-    else tap_code(KC_SPACE);
+    if (!layer_state_is(_FN2)) tap_code(KC_SPACE);
   }
   else if (td_tap_state.state == TD_SINGLE_HOLD) layer_on(_FN2);
-  else if (td_tap_state.state == TD_DOUBLE_TAP) {
-    if (layer_state_is(_FN2)) layer_off(_FN2);
-    else layer_on(_FN2);
-  }
+  else if (td_tap_state.state == TD_DOUBLE_TAP) layer_on(_FN2);
 }
 
-void tapdance_toggle_fn2_reset(tap_dance_state_t *state, void *user_data) {
+void td_fn2_reset(tap_dance_state_t *state, void *user_data) {
   if (td_tap_state.state == TD_SINGLE_TAP) layer_off(_FN2);
   else if (td_tap_state.state == TD_SINGLE_HOLD) layer_off(_FN2);
   td_tap_state.state = TD_NONE;
@@ -128,41 +123,54 @@ void tapdance_toggle_fn2_reset(tap_dance_state_t *state, void *user_data) {
 
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
-  [TD_KC_COLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-  [TD_KC_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
-  [TD_MC_VI12] = ACTION_TAP_DANCE_FN(tapdance_vi12),
-  [TD_MC_FN2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tapdance_toggle_fn2_finished, tapdance_toggle_fn2_reset),
+  [TD_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
+  [TD_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
+  [TD_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
+  [TD_FN2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
 };
 
-const key_override_t kc_cmd_s_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
-const key_override_t kc_cmd_d_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
-const key_override_t kc_cmd_f_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
-const key_override_t kc_cmd_k_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K));
-const key_override_t kc_cmd_l_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L));
-const key_override_t kc_cmd_w_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
-const key_override_t kc_cmd_t_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
-const key_override_t kc_cmd_y_key_override = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
-const key_override_t kc_ctrl_l_key_override = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
-const key_override_t kc_7_key_override = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
-const key_override_t kc_8_key_override = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
-const key_override_t kc_9_key_override = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
-const key_override_t kc_0_key_override = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
+// KEY OVERRIDES -------------------------------------------------------------
+
+const key_override_t ko_cmd_s = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
+const key_override_t ko_cmd_d = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
+const key_override_t ko_cmd_f = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
+const key_override_t ko_cmd_g = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_G));
+const key_override_t ko_cmd_h = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_H));
+const key_override_t ko_cmd_j = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_D, G(KC_J));
+const key_override_t ko_cmd_k = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K));
+const key_override_t ko_cmd_l = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L));
+const key_override_t ko_cmd_w = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
+const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
+const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
+const key_override_t ko_rcmd_h = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_L, KC_MINS);
+const key_override_t ko_rcmd_j = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_D, KC_EQL);
+const key_override_t ko_rcmd_k = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_U, KC_SCLN);
+const key_override_t ko_rcmd_l = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_R, KC_QUOT);
+
+const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
+const key_override_t ko_7 = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
+const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
+const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
+const key_override_t ko_0 = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]){
-    &kc_cmd_s_key_override,
-    &kc_cmd_d_key_override,
-    &kc_cmd_f_key_override,
-    &kc_cmd_k_key_override,
-    &kc_cmd_l_key_override,
-    &kc_cmd_w_key_override,
-    &kc_cmd_t_key_override,
-    &kc_cmd_y_key_override,
-    &kc_ctrl_l_key_override,
-    &kc_7_key_override,
-    &kc_8_key_override,
-    &kc_9_key_override,
-    &kc_0_key_override,
+    &ko_cmd_s,
+    &ko_cmd_d,
+    &ko_cmd_f,
+    &ko_cmd_g,
+    &ko_cmd_h,
+    &ko_cmd_j,
+    &ko_cmd_k,
+    &ko_cmd_l,
+    &ko_cmd_w,
+    &ko_cmd_t,
+    &ko_cmd_y,
+    &ko_ctrl_l,
+    &ko_7,
+    &ko_8,
+    &ko_9,
+    &ko_0,
     NULL // Null terminate the array of overrides!
 };
 
@@ -175,14 +183,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN1] = LAYOUT(
     _______,KC_ACL0,TD_VI12,MC_VI11,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
-    MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
+    MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,KC_ENT,
     _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN2] = LAYOUT(
     KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,
     KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, TD_COLN,TD_QUOT,KC_BSLS,
-    _______,_______,_______,_______,_______,_______,KC_ENT, KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
+    _______,_______,_______,_______,_______,_______,_______,KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
