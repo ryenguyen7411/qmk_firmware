@@ -38,8 +38,9 @@ enum custom_keycodes {
   MC_VI13,
   MC_VI16,
   MC_VI19,
-  PEEK,
   SCREEN1,
+  SCREEN2,
+  PEEK,
   CLEAR,
   MOUSE,
   MC_RCMD,
@@ -49,14 +50,14 @@ enum custom_keycodes {
 
 // Tap Dance Definitions
 enum tap_dances {
-  TD_SCLN,
-  TD_QUOT,
-  TD_VI12,
-  TD_FN2,
+  TD_FN_SCLN,
+  TD_FN_QUOT,
+  TD_FN_VI12,
+  TD_FN_FN2,
 };
 
 #define FN1 LT(_FN1, KC_SPACE)
-#define FN2 TD(TD_FN2)
+#define FN2 TD(TD_FN_FN2)
 #define FN2_LT LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
@@ -68,12 +69,11 @@ enum tap_dances {
 #define WIN_R C(KC_RIGHT)
 #define HTML G(S(KC_C))
 #define DOCK C(KC_F3)
-#define SCREEN2 G(S(KC_RBRC))
 #define PASTE G(KC_V)
 
-#define TD_COLN TD(TD_SCLN)
-#define TD_QUOT TD(TD_QUOT)
-#define TD_VI12 TD(TD_VI12)
+#define TD_SCLN TD(TD_FN_SCLN)
+#define TD_QUOT TD(TD_FN_QUOT)
+#define TD_VI12 TD(TD_FN_VI12)
 
 // TAP DANCE -----------------------------------------------------------------
 
@@ -123,10 +123,10 @@ void td_fn2_reset(tap_dance_state_t *state, void *user_data) {
 
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
-  [TD_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-  [TD_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
-  [TD_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
-  [TD_FN2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
+  [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
+  [TD_FN_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
+  [TD_FN_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
+  [TD_FN_FN2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
 };
 
 // KEY OVERRIDES -------------------------------------------------------------
@@ -142,12 +142,20 @@ const key_override_t ko_cmd_l = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L)
 const key_override_t ko_cmd_w = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
 const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
 const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
+const key_override_t ko_rcmd_s = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_R, KC_LSFT);
+const key_override_t ko_rcmd_d = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_U, KC_LOPT);
+const key_override_t ko_rcmd_f = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_D, KC_GRV);
+const key_override_t ko_rcmd_g = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_L, KC_TAB);
 const key_override_t ko_rcmd_h = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_L, KC_MINS);
 const key_override_t ko_rcmd_j = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_D, KC_EQL);
 const key_override_t ko_rcmd_k = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_U, KC_SCLN);
 const key_override_t ko_rcmd_l = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_R, KC_QUOT);
-
+const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, KC_MS_L, C(KC_H));
+const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, KC_MS_D, C(KC_J));
+const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, KC_MS_U, C(KC_K));
 const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
+const key_override_t ko_ctrl_o = ko_make_basic(MOD_MASK_CTRL, KC_DEL, C(KC_O));
+
 const key_override_t ko_7 = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
 const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
 const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
@@ -166,7 +174,19 @@ const key_override_t **key_overrides = (const key_override_t *[]){
     &ko_cmd_w,
     &ko_cmd_t,
     &ko_cmd_y,
+    &ko_rcmd_s,
+    &ko_rcmd_d,
+    &ko_rcmd_f,
+    &ko_rcmd_g,
+    &ko_rcmd_h,
+    &ko_rcmd_j,
+    &ko_rcmd_k,
+    &ko_rcmd_l,
+    &ko_ctrl_h,
+    &ko_ctrl_j,
+    &ko_ctrl_k,
     &ko_ctrl_l,
+    &ko_ctrl_o,
     &ko_7,
     &ko_8,
     &ko_9,
@@ -189,7 +209,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN2] = LAYOUT(
     KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,
-    KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, TD_COLN,TD_QUOT,KC_BSLS,
+    KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, TD_SCLN,TD_QUOT,KC_BSLS,
     _______,_______,_______,_______,_______,_______,_______,KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -207,20 +227,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-static bool is_l_cmd_pressed = false;
+static bool is_lcmd_pressed = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case KC_LCMD:
-      is_l_cmd_pressed = record->event.pressed;
+      is_lcmd_pressed = record->event.pressed;
       break;
     case MC_RCMD:
-      if (is_l_cmd_pressed && record->event.pressed) {
-        register_code(KC_A);
+      if (is_lcmd_pressed) {
+        if (record->event.pressed) {
+          register_code(KC_A);
+        } else {
+          unregister_code(KC_A);
+        }
         return false;
-      } else if (is_l_cmd_pressed && !record->event.pressed) {
-        unregister_code(KC_A);
-        return false;
+      } else {
+        if (record->event.pressed) {
+          register_code(KC_RCMD);
+        } else {
+          unregister_code(KC_RCMD);
+        }
       }
       break;
     default:
@@ -266,6 +293,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       case MC_VI19:
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "p");
         break;
+      case SCREEN1:
+        if ((keyboard_report->mods & MOD_BIT(KC_LGUI)) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
+          SEND_STRING("b");
+        } else if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+          SEND_STRING("[");
+        } else {
+          register_code(KC_LCMD);
+          register_code(KC_LSFT);
+          register_code(KC_LBRC);
+          unregister_code(KC_LBRC);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LCMD);
+        }
+        break;
+      case SCREEN2:
+        if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+          SEND_STRING("]");
+        } else {
+          register_code(KC_LCMD);
+          register_code(KC_LSFT);
+          register_code(KC_RBRC);
+          unregister_code(KC_RBRC);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LCMD);
+        }
+        break;
       case PEEK:
         if ((keyboard_report->mods & MOD_MASK_GUI) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
           SEND_STRING("n");
@@ -274,18 +327,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_UP);
           unregister_code(KC_UP);
           unregister_code(KC_LCTL);
-        }
-        break;
-      case SCREEN1:
-        if ((keyboard_report->mods & MOD_MASK_GUI) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
-          SEND_STRING("b");
-        } else {
-          register_code(KC_LCMD);
-          register_code(KC_LSFT);
-          register_code(KC_LBRC);
-          unregister_code(KC_LBRC);
-          unregister_code(KC_LSFT);
-          unregister_code(KC_LCMD);
         }
         break;
       case CLEAR:
