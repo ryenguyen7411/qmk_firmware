@@ -145,7 +145,7 @@ const key_override_t ko_cmd_l = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L)
 const key_override_t ko_cmd_w = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
 const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
 const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
-const key_override_t ko_cmd_o = ko_make_basic(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O));
+const key_override_t ko_cmd_o = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
 
 // Right Cmd + some keys on FN1 layer -> FN2 layer (without Cmd pressed)
 const key_override_t ko_rcmd_s = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_R, KC_LSFT);
