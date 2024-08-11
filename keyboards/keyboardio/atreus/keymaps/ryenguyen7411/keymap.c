@@ -41,6 +41,8 @@ enum custom_keycodes {
   SCREEN1,
   SCREEN2,
   PEEK,
+  WIN_L,
+  WIN_R,
   CLEAR,
   MOUSE,
   MC_RCMD,
@@ -65,8 +67,8 @@ enum tap_dances {
 #define SHFTESC LSFT_T(KC_ESC)
 #define CTRLESC RCTL_T(KC_ESC)
 #define LANG C(KC_SPACE)
-#define WIN_L C(KC_LEFT)
-#define WIN_R C(KC_RIGHT)
+/* #define WIN_L C(KC_LEFT) */
+/* #define WIN_R C(KC_RIGHT) */
 #define HTML G(S(KC_C))
 #define DOCK C(KC_F3)
 #define PASTE G(KC_V)
@@ -131,6 +133,7 @@ tap_dance_action_t tap_dance_actions[] = {
 
 // KEY OVERRIDES -------------------------------------------------------------
 
+// Left Cmd + some keys on FN1 layer -> Base layer (with Cmd pressed)
 const key_override_t ko_cmd_s = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
 const key_override_t ko_cmd_d = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
 const key_override_t ko_cmd_f = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
@@ -142,6 +145,9 @@ const key_override_t ko_cmd_l = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L)
 const key_override_t ko_cmd_w = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
 const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
 const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
+const key_override_t ko_cmd_o = ko_make_basic(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O));
+
+// Right Cmd + some keys on FN1 layer -> FN2 layer (without Cmd pressed)
 const key_override_t ko_rcmd_s = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_R, KC_LSFT);
 const key_override_t ko_rcmd_d = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_U, KC_LOPT);
 const key_override_t ko_rcmd_f = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_D, KC_GRV);
@@ -150,12 +156,16 @@ const key_override_t ko_rcmd_h = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_L, KC_MIN
 const key_override_t ko_rcmd_j = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_D, KC_EQL);
 const key_override_t ko_rcmd_k = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_U, KC_SCLN);
 const key_override_t ko_rcmd_l = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_R, KC_QUOT);
+const key_override_t ko_rcmd_ent = ko_make_basic(MOD_BIT(KC_RCMD), KC_ENT, KC_BSLS);
+
+// Ctrl + some keys on FN1 layer -> Base layer (with Ctrl pressed)
 const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, KC_MS_L, C(KC_H));
 const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, KC_MS_D, C(KC_J));
 const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, KC_MS_U, C(KC_K));
 const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
 const key_override_t ko_ctrl_o = ko_make_basic(MOD_MASK_CTRL, KC_DEL, C(KC_O));
 
+// Cmd + some keys on FN2 layer -> FN1 layer (without Cmd pressed)
 const key_override_t ko_7 = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
 const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
 const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
@@ -174,6 +184,7 @@ const key_override_t **key_overrides = (const key_override_t *[]){
     &ko_cmd_w,
     &ko_cmd_t,
     &ko_cmd_y,
+    &ko_cmd_o,
     &ko_rcmd_s,
     &ko_rcmd_d,
     &ko_rcmd_f,
@@ -182,6 +193,7 @@ const key_override_t **key_overrides = (const key_override_t *[]){
     &ko_rcmd_j,
     &ko_rcmd_k,
     &ko_rcmd_l,
+    &ko_rcmd_ent,
     &ko_ctrl_h,
     &ko_ctrl_j,
     &ko_ctrl_k,
@@ -203,7 +215,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN1] = LAYOUT(
     _______,KC_ACL0,TD_VI12,MC_VI11,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
-    MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,KC_ENT,
+    MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
     _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -320,12 +332,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
       case PEEK:
-        if ((keyboard_report->mods & MOD_MASK_GUI) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
+        if ((keyboard_report->mods & MOD_BIT(KC_LGUI)) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
           SEND_STRING("n");
+        } else if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+          SEND_STRING(SS_LCTL(","));
         } else {
           register_code(KC_LCTL);
           register_code(KC_UP);
           unregister_code(KC_UP);
+          unregister_code(KC_LCTL);
+        }
+        break;
+      case WIN_L:
+        if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+          SEND_STRING(SS_LCTL("."));
+        } else {
+          register_code(KC_LCTL);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+          unregister_code(KC_LCTL);
+        }
+        break;
+      case WIN_R:
+        if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+          SEND_STRING(SS_LCTL("/"));
+        } else {
+          register_code(KC_LCTL);
+          register_code(KC_RIGHT);
+          unregister_code(KC_RIGHT);
           unregister_code(KC_LCTL);
         }
         break;
