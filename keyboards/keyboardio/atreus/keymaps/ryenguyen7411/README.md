@@ -5,27 +5,24 @@
 |-----------------------------|           |-----------------------------|
 |  A  |  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
 |-----------------------------------------------------------------------|
-|Shift|  Z  |  X  |  C  |  V  | FN2 |MOUSE|  B  |  N  |  M  | FN2 |Ctrl |
+|Shift|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |     |Ctrl |
 |-----------------------------------------------------------------------|
-|Ctrl |     | Alt | Cmd | FN2 | FN1 |Space| FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
+|Ctrl |     | Alt | Cmd | FN2 | FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
 '-----------------------------------------------------------------------'
 
 - Shift Tap = ESC
 - Right Ctrl Tap = ESC
-- FN1 Tap = Space
-- FN2 Tap = Space
-- FN3 Tap = Space
+- FN1,2,3 Tap = Space
 - FN4 Tap = Enter
 - MOUSE Tap = FN1 on
-    > Shift + MOUSE = FN1 off
-    > Ctrl + MOUSE = FN1 off
+    > Shift/Ctrl + MOUSE = FN1 off
 
 ## FN1 LAYOUT
 
 .-----------------------------.           .-----------------------------.
 |     |SlowM|VI12 |VI11 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
 |-----------------------------|           |-----------------------------|
-| Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |Enter|
+| Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |Scr01|Ctr ▲|Ctr ◀|Ctr ▶|Scr02|
 |-----------------------------------------------------------------------|
@@ -53,9 +50,9 @@
 ## FN3 LAYOUT
 
 .-----------------------------.           .-----------------------------.
-|     |     |     |VI13 |     |           |VI05 |     |VI19 | F11 | F12 |
+|     |     |     |VI08 |     |           |VI05 |     |VI10 | F11 | F12 |
 |-----------------------------|           |-----------------------------|
-|     |     |     |     |VI16 |           |VI07 |VI03 |VI06 |VI02 |VI01 |
+|     |     |     |     |VI09 |           |VI07 |VI03 |VI06 |VI02 |VI01 |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |VI04 |     |     |     |PASTE|
 |-----------------------------------------------------------------------|
@@ -69,10 +66,9 @@
 - VI05: Vim Resume picker
 - VI06: Vim File Browser
 - VI07: Vim Emmet Tab
-- VI13: Vim DiffviewOpen
-- VI16: Vim DiffviewFileHistory
-- VI18: Vim Organize Import
-- VI19: Vim Notes
+- VI08: Vim DiffviewOpen
+- VI09: Vim DiffviewFileHistory
+- VI10: Vim Notes
 
 ## FN4 LAYOUT
 
@@ -86,14 +82,9 @@
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
 
-- S07 = Chrome: clear console
-
-
 # FLASHING
 
 ```
 $ qmk compile -kb keyboardio/atreus -km ryenguyen7411
 $ qmk flash -kb keyboardio/atreus -km ryenguyen7411
 ```
-
-# MOUSE Shortcut needed
