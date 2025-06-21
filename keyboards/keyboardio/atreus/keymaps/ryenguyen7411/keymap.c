@@ -160,18 +160,6 @@ const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
 const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
 const key_override_t ko_0 = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
-/* // Right Cmd + some keys on FN1 layer -> FN2 layer (without Cmd pressed) */
-/* const key_override_t ko_rcmd_s = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_R, G(KC_LSFT)); */
-/* const key_override_t ko_rcmd_d = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_U, G(KC_LOPT)); */
-/* const key_override_t ko_rcmd_f = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_D, KC_GRV); */
-/* const key_override_t ko_rcmd_g = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_L, KC_TAB); */
-/* const key_override_t ko_rcmd_h = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_L, KC_MINS); */
-/* const key_override_t ko_rcmd_j = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_D, KC_EQL); */
-/* const key_override_t ko_rcmd_k = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_U, KC_SCLN); */
-/* const key_override_t ko_rcmd_l = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_R, KC_QUOT); */
-/* const key_override_t ko_rcmd_ent = ko_make_basic(MOD_BIT(KC_RCMD), KC_ENT, KC_BSLS); */
-
-// This globally defines all key overrides to be used
 const key_override_t *key_overrides[] = {
     &ko_cmd_s,
     &ko_cmd_d,
@@ -289,8 +277,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
         break;
       case MC_VI11:
-        if (get_mods() & MOD_MASK_GUI) {
+        // Rcmd + R -> send R only, no Cmd pressed
+        if (get_mods() & MOD_BIT(KC_LGUI)) {
           SEND_STRING("r");
+        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
+          uint8_t mods = get_mods();
+          del_mods(MOD_BIT(KC_RGUI));
+          tap_code16(KC_R);
+          set_mods(mods);
         } else {
           SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "w");
         }
@@ -301,24 +295,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING("[");
         } else {
-          register_code(KC_LCMD);
-          register_code(KC_LSFT);
-          register_code(KC_LBRC);
-          unregister_code(KC_LBRC);
-          unregister_code(KC_LSFT);
-          unregister_code(KC_LCMD);
+          tap_code16(LGUI(LSFT(KC_LBRC)));
         }
         break;
       case SCREEN2:
         if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING("]");
         } else {
-          register_code(KC_LCMD);
-          register_code(KC_LSFT);
-          register_code(KC_RBRC);
-          unregister_code(KC_RBRC);
-          unregister_code(KC_LSFT);
-          unregister_code(KC_LCMD);
+          tap_code16(LGUI(LSFT(KC_RBRC)));
         }
         break;
       case PEEK:
@@ -327,10 +311,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING(SS_LCTL(","));
         } else {
-          register_code(KC_LCTL);
-          register_code(KC_UP);
-          unregister_code(KC_UP);
-          unregister_code(KC_LCTL);
+          tap_code16(LCTL(KC_UP));
         }
         break;
       case WIN_L:
@@ -339,20 +320,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING(SS_LCTL("."));
         } else {
-          register_code(KC_LCTL);
-          register_code(KC_LEFT);
-          unregister_code(KC_LEFT);
-          unregister_code(KC_LCTL);
+          tap_code16(LCTL(KC_LEFT));
         }
         break;
       case WIN_R:
         if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING(SS_LCTL("/"));
         } else {
-          register_code(KC_LCTL);
-          register_code(KC_RIGHT);
-          unregister_code(KC_RIGHT);
-          unregister_code(KC_LCTL);
+          tap_code16(LCTL(KC_RIGHT));
         }
         break;
       case CLEAR:
