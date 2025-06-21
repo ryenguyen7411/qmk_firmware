@@ -17,7 +17,7 @@
 #include QMK_KEYBOARD_H
 
 // Layer Definitions
-enum rye_keyboardio_atreus_layers {
+enum layer_names {
   _BASE,
   _FN1,
   _FN2,
@@ -147,17 +147,6 @@ const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T)
 const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
 const key_override_t ko_cmd_o = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
 
-// Right Cmd + some keys on FN1 layer -> FN2 layer (without Cmd pressed)
-/* const key_override_t ko_rcmd_s = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_R, G(KC_LSFT)); */
-/* const key_override_t ko_rcmd_d = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_U, G(KC_LOPT)); */
-/* const key_override_t ko_rcmd_f = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_D, KC_GRV); */
-/* const key_override_t ko_rcmd_g = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_L, KC_TAB); */
-/* const key_override_t ko_rcmd_h = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_L, KC_MINS); */
-/* const key_override_t ko_rcmd_j = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_D, KC_EQL); */
-/* const key_override_t ko_rcmd_k = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_U, KC_SCLN); */
-/* const key_override_t ko_rcmd_l = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_R, KC_QUOT); */
-/* const key_override_t ko_rcmd_ent = ko_make_basic(MOD_BIT(KC_RCMD), KC_ENT, KC_BSLS); */
-
 // Ctrl + some keys on FN1 layer -> Base layer (with Ctrl pressed)
 const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, KC_MS_L, C(KC_H));
 const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, KC_MS_D, C(KC_J));
@@ -171,8 +160,19 @@ const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
 const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
 const key_override_t ko_0 = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
+/* // Right Cmd + some keys on FN1 layer -> FN2 layer (without Cmd pressed) */
+/* const key_override_t ko_rcmd_s = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_R, G(KC_LSFT)); */
+/* const key_override_t ko_rcmd_d = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_U, G(KC_LOPT)); */
+/* const key_override_t ko_rcmd_f = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_D, KC_GRV); */
+/* const key_override_t ko_rcmd_g = ko_make_basic(MOD_BIT(KC_RCMD), KC_WH_L, KC_TAB); */
+/* const key_override_t ko_rcmd_h = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_L, KC_MINS); */
+/* const key_override_t ko_rcmd_j = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_D, KC_EQL); */
+/* const key_override_t ko_rcmd_k = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_U, KC_SCLN); */
+/* const key_override_t ko_rcmd_l = ko_make_basic(MOD_BIT(KC_RCMD), KC_MS_R, KC_QUOT); */
+/* const key_override_t ko_rcmd_ent = ko_make_basic(MOD_BIT(KC_RCMD), KC_ENT, KC_BSLS); */
+
 // This globally defines all key overrides to be used
-const key_override_t **key_overrides = (const key_override_t *[]){
+const key_override_t *key_overrides[] = {
     &ko_cmd_s,
     &ko_cmd_d,
     &ko_cmd_f,
@@ -185,15 +185,6 @@ const key_override_t **key_overrides = (const key_override_t *[]){
     &ko_cmd_t,
     &ko_cmd_y,
     &ko_cmd_o,
-    /* &ko_rcmd_s, */
-    /* &ko_rcmd_d, */
-    /* &ko_rcmd_f, */
-    /* &ko_rcmd_g, */
-    /* &ko_rcmd_h, */
-    /* &ko_rcmd_j, */
-    /* &ko_rcmd_k, */
-    /* &ko_rcmd_l, */
-    /* &ko_rcmd_ent, */
     &ko_ctrl_h,
     &ko_ctrl_j,
     &ko_ctrl_k,
@@ -203,7 +194,6 @@ const key_override_t **key_overrides = (const key_override_t *[]){
     &ko_8,
     &ko_9,
     &ko_0,
-    NULL // Null terminate the array of overrides!
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -299,16 +289,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
         break;
       case MC_VI11:
-        if (keyboard_report->mods & MOD_MASK_GUI) {
+        if (get_mods() & MOD_MASK_GUI) {
           SEND_STRING("r");
         } else {
           SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "w");
         }
         break;
       case SCREEN1:
-        if ((keyboard_report->mods & MOD_BIT(KC_LGUI)) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
+        if ((get_mods() & MOD_BIT(KC_LGUI)) || (get_mods() & MOD_MASK_SHIFT)) {
           SEND_STRING("b");
-        } else if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING("[");
         } else {
           register_code(KC_LCMD);
@@ -320,7 +310,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
       case SCREEN2:
-        if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+        if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING("]");
         } else {
           register_code(KC_LCMD);
@@ -332,9 +322,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
       case PEEK:
-        if ((keyboard_report->mods & MOD_BIT(KC_LGUI)) || (keyboard_report->mods & MOD_MASK_SHIFT)) {
+        if ((get_mods() & MOD_BIT(KC_LGUI)) || (get_mods() & MOD_MASK_SHIFT)) {
           SEND_STRING("n");
-        } else if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING(SS_LCTL(","));
         } else {
           register_code(KC_LCTL);
@@ -344,7 +334,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
       case WIN_L:
-        if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+        if (get_mods() & MOD_BIT(KC_LGUI) || get_mods() & MOD_MASK_SHIFT) {
+          SEND_STRING("m");
+        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING(SS_LCTL("."));
         } else {
           register_code(KC_LCTL);
@@ -354,7 +346,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
       case WIN_R:
-        if (keyboard_report->mods & MOD_BIT(KC_RGUI)) {
+        if (get_mods() & MOD_BIT(KC_RGUI)) {
           SEND_STRING(SS_LCTL("/"));
         } else {
           register_code(KC_LCTL);
@@ -367,7 +359,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
         break;
       case MOUSE:
-        if ((keyboard_report->mods & MOD_MASK_SHIFT) || (keyboard_report->mods & MOD_MASK_CTRL)) {
+        if ((get_mods() & MOD_MASK_SHIFT) || (get_mods() & MOD_MASK_CTRL)) {
           layer_off(_FN1);
           layer_off(_FN2);
         } else {
