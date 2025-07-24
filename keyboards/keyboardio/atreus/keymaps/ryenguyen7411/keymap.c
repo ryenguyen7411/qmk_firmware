@@ -16,52 +16,56 @@
 
 #include QMK_KEYBOARD_H
 
-// Layer Definitions
+// =============================================================================
+// LAYER DEFINITIONS
+// =============================================================================
 enum layer_names {
-  _BASE,
-  _FN1,
-  _FN2,
-  _FN3,
-  _FN4,
+    _BASE,
+    _FN1,
+    _FN2,
+    _FN3,
+    _FN4,
 };
 
-// Custom Keycodes
+// =============================================================================
+// CUSTOM KEYCODES & MACROS
+// =============================================================================
 enum custom_keycodes {
-  MC_VI01 = SAFE_RANGE,
-  MC_VI02,
-  MC_VI03,
-  MC_VI04,
-  MC_VI05,
-  MC_VI06,
-  MC_VI07,
-  MC_VI08,
-  MC_VI09,
-  MC_VI10,
-  MC_VI11,
-  SCREEN1,
-  SCREEN2,
-  PEEK,
-  WIN_L,
-  WIN_R,
-  CLEAR,
-  MOUSE,
-  MC_RCMD,
-  MC_S10,
-  MC_S11,
-  TERM,
+    MC_VI01 = SAFE_RANGE,
+    MC_VI02,
+    MC_VI03,
+    MC_VI04,
+    MC_VI05,
+    MC_VI06,
+    MC_VI07,
+    MC_VI08,
+    MC_VI09,
+    MC_VI10,
+    MC_VI11,
+    SCREEN1,
+    SCREEN2,
+    PEEK,
+    WIN_L,
+    WIN_R,
+    CLEAR,
+    MOUSE,
+    MC_RCMD,
+    MC_S10,
+    MC_S11,
 };
 
-// Tap Dance Definitions
+// =============================================================================
+// TAP DANCE CONFIGURATION
+// =============================================================================
 enum tap_dances {
-  TD_FN_SCLN,
-  TD_FN_QUOT,
-  TD_FN_VI12,
-  TD_FN_FN2,
+    TD_FN_SCLN,
+    TD_FN_QUOT,
+    TD_FN_VI12,
+    TD_FN_FN2,
 };
 
 #define FN1 LT(_FN1, KC_SPACE)
 #define FN2 TD(TD_FN_FN2)
-#define FN2_LT LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
 
@@ -78,112 +82,115 @@ enum tap_dances {
 #define TD_QUOT TD(TD_FN_QUOT)
 #define TD_VI12 TD(TD_FN_VI12)
 
-// TAP DANCE -----------------------------------------------------------------
+// TAP DANCE IMPLEMENTATION
 
-typedef enum {
-  TD_NONE,
-  TD_UNKNOWN,
-  TD_SINGLE_TAP,
-  TD_SINGLE_HOLD,
-  TD_DOUBLE_TAP
-} td_tap_t;
+typedef enum { TD_NONE, TD_UNKNOWN, TD_SINGLE_TAP, TD_SINGLE_HOLD, TD_DOUBLE_TAP } td_tap_t;
 
 typedef struct {
-  td_tap_t state;
+    td_tap_t state;
 } td_state_t;
 
-static td_state_t td_tap_state = {
-  .state = TD_NONE
-};
+static td_state_t td_tap_state = {.state = TD_NONE};
 
 td_tap_t td_get_state(tap_dance_state_t *state) {
-  if (state->count == 1) {
-    if (!state->pressed) return TD_SINGLE_TAP;
-    else return TD_SINGLE_HOLD;
-  }
-  return TD_DOUBLE_TAP;
+    if (state->count == 1) {
+        if (!state->pressed)
+            return TD_SINGLE_TAP;
+        else
+            return TD_SINGLE_HOLD;
+    }
+    return TD_DOUBLE_TAP;
 }
 
 void td_vi12(tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) tap_code(KC_E);
-  else SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "qq");
+    if (state->count == 1)
+        tap_code(KC_E);
+    else
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "qq");
 }
 
 void td_fn2_finished(tap_dance_state_t *state, void *user_data) {
-  td_tap_state.state = td_get_state(state);
-  if (td_tap_state.state == TD_SINGLE_TAP) {
-    if (!layer_state_is(_FN2)) tap_code(KC_SPACE);
-  }
-  else if (td_tap_state.state == TD_SINGLE_HOLD) layer_on(_FN2);
-  else if (td_tap_state.state == TD_DOUBLE_TAP) layer_on(_FN2);
+    td_tap_state.state = td_get_state(state);
+    if (td_tap_state.state == TD_SINGLE_TAP) {
+        if (!layer_state_is(_FN2)) tap_code(KC_SPACE);
+    } else if (td_tap_state.state == TD_SINGLE_HOLD)
+        layer_on(_FN2);
+    else if (td_tap_state.state == TD_DOUBLE_TAP)
+        layer_on(_FN2);
 }
 
 void td_fn2_reset(tap_dance_state_t *state, void *user_data) {
-  if (td_tap_state.state == TD_SINGLE_TAP) layer_off(_FN2);
-  else if (td_tap_state.state == TD_SINGLE_HOLD) layer_off(_FN2);
-  td_tap_state.state = TD_NONE;
+    if (td_tap_state.state == TD_SINGLE_TAP)
+        layer_off(_FN2);
+    else if (td_tap_state.state == TD_SINGLE_HOLD)
+        layer_off(_FN2);
+    td_tap_state.state = TD_NONE;
 }
 
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
-  [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-  [TD_FN_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
-  [TD_FN_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
-  [TD_FN_FN2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
+    [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
+    [TD_FN_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
+    [TD_FN_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
+    [TD_FN_FN2]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
 };
 
-// KEY OVERRIDES -------------------------------------------------------------
+// =============================================================================
+// KEY OVERRIDES
+// =============================================================================
 
-// Left Cmd + some keys on FN1 layer -> Base layer (with Cmd pressed)
-const key_override_t ko_cmd_s = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
-const key_override_t ko_cmd_d = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
-const key_override_t ko_cmd_f = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
-const key_override_t ko_cmd_g = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_G));
-const key_override_t ko_cmd_h = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_H));
-const key_override_t ko_cmd_j = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_D, G(KC_J));
-const key_override_t ko_cmd_k = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K));
-const key_override_t ko_cmd_l = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L));
-const key_override_t ko_cmd_w = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
-const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
-const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
-const key_override_t ko_cmd_o = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
+typedef struct {
+    uint8_t  mods;
+    uint16_t trigger;
+    uint16_t replacement;
+    uint8_t  layers;
+    uint8_t  negmods;
+} key_override_config_t;
 
-// Ctrl + some keys on FN1 layer -> Base layer (with Ctrl pressed)
+static const key_override_config_t cmd_overrides[] = {
+    {MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S), ~0, 0}, {MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D), ~0, 0}, {MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_L, G(KC_G), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_L, G(KC_H), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_D, G(KC_J), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L), ~0, 0}, {MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W), ~0, 0}, {MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T), ~0, 0}, {MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y), ~0, 0}, {MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT},
+};
+
+static const key_override_config_t ctrl_overrides[] = {
+    {MOD_MASK_CTRL, KC_MS_L, C(KC_H), ~0, 0}, {MOD_MASK_CTRL, KC_MS_D, C(KC_J), ~0, 0}, {MOD_MASK_CTRL, KC_MS_U, C(KC_K), ~0, 0}, {MOD_MASK_CTRL, KC_MS_R, C(KC_L), ~0, 0}, {MOD_MASK_CTRL, KC_DEL, C(KC_O), ~0, 0},
+};
+
+static const key_override_config_t gui_overrides[] = {
+    {MOD_MASK_GUI, KC_7, DOCK, ~0, 0},
+    {MOD_MASK_GUI, KC_8, LANG, ~0, 0},
+    {MOD_MASK_GUI, KC_9, KC_DEL, ~0, 0},
+    {MOD_MASK_GUI, KC_0, KC_BSPC, ~0, 0},
+};
+
+const key_override_t ko_cmd_s  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
+const key_override_t ko_cmd_d  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
+const key_override_t ko_cmd_f  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
+const key_override_t ko_cmd_g  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_G));
+const key_override_t ko_cmd_h  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_H));
+const key_override_t ko_cmd_j  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_D, G(KC_J));
+const key_override_t ko_cmd_k  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K));
+const key_override_t ko_cmd_l  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L));
+const key_override_t ko_cmd_w  = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
+const key_override_t ko_cmd_t  = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
+const key_override_t ko_cmd_y  = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
+const key_override_t ko_cmd_o  = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
 const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, KC_MS_L, C(KC_H));
 const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, KC_MS_D, C(KC_J));
 const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, KC_MS_U, C(KC_K));
 const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
 const key_override_t ko_ctrl_o = ko_make_basic(MOD_MASK_CTRL, KC_DEL, C(KC_O));
-
-// Cmd + some keys on FN2 layer -> FN1 layer (without Cmd pressed)
-const key_override_t ko_7 = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
-const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
-const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
-const key_override_t ko_0 = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
+const key_override_t ko_7      = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
+const key_override_t ko_8      = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
+const key_override_t ko_9      = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
+const key_override_t ko_0      = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
 const key_override_t *key_overrides[] = {
-    &ko_cmd_s,
-    &ko_cmd_d,
-    &ko_cmd_f,
-    &ko_cmd_g,
-    &ko_cmd_h,
-    &ko_cmd_j,
-    &ko_cmd_k,
-    &ko_cmd_l,
-    &ko_cmd_w,
-    &ko_cmd_t,
-    &ko_cmd_y,
-    &ko_cmd_o,
-    &ko_ctrl_h,
-    &ko_ctrl_j,
-    &ko_ctrl_k,
-    &ko_ctrl_l,
-    &ko_ctrl_o,
-    &ko_7,
-    &ko_8,
-    &ko_9,
-    &ko_0,
+    &ko_cmd_s, &ko_cmd_d, &ko_cmd_f, &ko_cmd_g, &ko_cmd_h, &ko_cmd_j, &ko_cmd_k, &ko_cmd_l, &ko_cmd_w, &ko_cmd_t, &ko_cmd_y, &ko_cmd_o, &ko_ctrl_h, &ko_ctrl_j, &ko_ctrl_k, &ko_ctrl_l, &ko_ctrl_o, &ko_7, &ko_8, &ko_9, &ko_0,
 };
+
+// =============================================================================
+// KEYMAP LAYOUTS
+// =============================================================================
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
@@ -205,7 +212,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
-    _______,_______,_______,MC_VI08,TERM,                   MC_VI05,_______,MC_VI10,KC_F11, KC_F12,
+    _______,_______,_______,MC_VI08,_______,                MC_VI05,_______,MC_VI10,KC_F11, KC_F12,
     _______,_______,_______,_______,MC_VI09,                MC_VI07,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
     _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -218,137 +225,189 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-static bool is_lcmd_pressed = false;
+// =============================================================================
+// GLOBAL STATE & HELPER FUNCTIONS
+// =============================================================================
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case KC_LCMD:
-      is_lcmd_pressed = record->event.pressed;
-      break;
-    case MC_RCMD:
-      if (is_lcmd_pressed) {
+static bool is_lcmd_pressed = false;
+static bool is_lgui_pressed(void) {
+    return get_mods() & MOD_BIT(KC_LGUI);
+}
+
+static bool is_rgui_pressed(void) {
+    return get_mods() & MOD_BIT(KC_RGUI);
+}
+
+static bool is_shift_pressed(void) {
+    return get_mods() & MOD_MASK_SHIFT;
+}
+
+static bool is_ctrl_pressed(void) {
+    return get_mods() & MOD_MASK_CTRL;
+}
+
+// =============================================================================
+// KEY PROCESSING HANDLERS
+// =============================================================================
+static bool handle_rcmd_key(keyrecord_t *record) {
+    if (is_lcmd_pressed) {
         if (record->event.pressed) {
-          register_code(KC_A);
+            register_code(KC_A);
         } else {
-          unregister_code(KC_A);
+            unregister_code(KC_A);
         }
         return false;
-      } else {
+    } else {
         if (record->event.pressed) {
-          register_code(KC_RCMD);
+            register_code(KC_RCMD);
         } else {
-          unregister_code(KC_RCMD);
+            unregister_code(KC_RCMD);
         }
-      }
-      break;
-    default:
-      break;
-  }
-
-  if (record->event.pressed) {
-    switch (keycode) {
-      case MC_VI01:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) ";");
-        break;
-      case MC_VI02:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "l");
-        break;
-      case MC_VI03:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "j");
-        break;
-      case MC_VI04:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "b");
-        break;
-      case MC_VI05:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "'");
-        break;
-      case MC_VI06:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "k");
-        break;
-      case MC_VI07:
-        SEND_STRING(SS_LCTL("j"));
-        break;
-      case MC_VI08:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "r");
-        break;
-      case MC_VI09:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "f");
-        break;
-      case MC_VI10:
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
-        break;
-      case MC_VI11:
-        // Rcmd + R -> send R only, no Cmd pressed
-        if (get_mods() & MOD_BIT(KC_LGUI)) {
-          SEND_STRING("r");
-        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
-          uint8_t mods = get_mods();
-          del_mods(MOD_BIT(KC_RGUI));
-          tap_code16(KC_R);
-          set_mods(mods);
-        } else {
-          SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "w");
-        }
-        break;
-      case SCREEN1:
-        if ((get_mods() & MOD_BIT(KC_LGUI)) || (get_mods() & MOD_MASK_SHIFT)) {
-          SEND_STRING("b");
-        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
-          SEND_STRING("[");
-        } else {
-          tap_code16(LGUI(LSFT(KC_LBRC)));
-        }
-        break;
-      case SCREEN2:
-        if (get_mods() & MOD_BIT(KC_RGUI)) {
-          SEND_STRING("]");
-        } else {
-          tap_code16(LGUI(LSFT(KC_RBRC)));
-        }
-        break;
-      case PEEK:
-        if ((get_mods() & MOD_BIT(KC_LGUI)) || (get_mods() & MOD_MASK_SHIFT)) {
-          SEND_STRING("n");
-        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
-          SEND_STRING(SS_LCTL(","));
-        } else {
-          tap_code16(LCTL(KC_UP));
-        }
-        break;
-      case WIN_L:
-        if (get_mods() & MOD_BIT(KC_LGUI) || get_mods() & MOD_MASK_SHIFT) {
-          SEND_STRING("m");
-        } else if (get_mods() & MOD_BIT(KC_RGUI)) {
-          SEND_STRING(SS_LCTL("."));
-        } else {
-          tap_code16(LCTL(KC_LEFT));
-        }
-        break;
-      case WIN_R:
-        if (get_mods() & MOD_BIT(KC_RGUI)) {
-          SEND_STRING(SS_LCTL("/"));
-        } else {
-          tap_code16(LCTL(KC_RIGHT));
-        }
-        break;
-      case CLEAR:
-        SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
-        break;
-      case MOUSE:
-        if ((get_mods() & MOD_MASK_SHIFT) || (get_mods() & MOD_MASK_CTRL)) {
-          layer_off(_FN1);
-          layer_off(_FN2);
-        } else {
-          layer_on(_FN1);
-          layer_off(_FN2);
-        }
-        break;
-      case TERM:
-        tap_code16(LCTL(KC_T));
-        break;
-      default:
-        break;
     }
-  }
-  return true;
+    return true;
+}
+
+static void handle_vi_command(uint16_t keycode) {
+    switch (keycode) {
+        case MC_VI01:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) ";");
+            break;
+        case MC_VI02:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "l");
+            break;
+        case MC_VI03:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "j");
+            break;
+        case MC_VI04:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "b");
+            break;
+        case MC_VI05:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "'");
+            break;
+        case MC_VI06:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "k");
+            break;
+        case MC_VI07:
+            SEND_STRING(SS_LCTL("j"));
+            break;
+        case MC_VI08:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "r");
+            break;
+        case MC_VI09:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "f");
+            break;
+        case MC_VI10:
+            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
+            break;
+    }
+}
+
+static bool handle_vi11_command(void) {
+    if (is_lgui_pressed()) {
+        SEND_STRING("r");
+    } else if (is_rgui_pressed()) {
+        uint8_t mods = get_mods();
+        del_mods(MOD_BIT(KC_RGUI));
+        tap_code16(KC_R);
+        set_mods(mods);
+    } else {
+        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "w");
+    }
+    return false;
+}
+
+static bool handle_utility_command(uint16_t keycode) {
+    switch (keycode) {
+        case PEEK:
+            if (is_lgui_pressed() || is_shift_pressed()) {
+                SEND_STRING("n");
+            } else if (is_rgui_pressed()) {
+                SEND_STRING(SS_LCTL(","));
+            } else {
+                tap_code16(LCTL(KC_UP));
+            }
+            break;
+        case WIN_L:
+            if (is_lgui_pressed() || is_shift_pressed()) {
+                SEND_STRING("m");
+            } else if (is_rgui_pressed()) {
+                SEND_STRING(SS_LCTL("."));
+            } else {
+                tap_code16(LCTL(KC_LEFT));
+            }
+            break;
+        case WIN_R:
+            if (is_rgui_pressed()) {
+                SEND_STRING(SS_LCTL("/"));
+            } else {
+                tap_code16(LCTL(KC_RIGHT));
+            }
+            break;
+        case SCREEN1:
+            if (is_lgui_pressed() || is_shift_pressed()) {
+                SEND_STRING("b");
+            } else if (is_rgui_pressed()) {
+                SEND_STRING("[");
+            } else {
+                tap_code16(LGUI(LSFT(KC_LBRC)));
+            }
+            break;
+        case SCREEN2:
+            if (is_rgui_pressed()) {
+                SEND_STRING("]");
+            } else {
+                tap_code16(LGUI(LSFT(KC_RBRC)));
+            }
+            break;
+        case CLEAR:
+            SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
+            break;
+        case MOUSE:
+            if (is_shift_pressed() || is_ctrl_pressed()) {
+                layer_off(_FN1);
+                layer_off(_FN2);
+            } else {
+                layer_on(_FN1);
+                layer_off(_FN2);
+            }
+            break;
+        default:
+            return true;
+    }
+    return false;
+}
+
+// =============================================================================
+// MAIN KEY PROCESSING
+// =============================================================================
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_LCMD:
+            is_lcmd_pressed = record->event.pressed;
+            break;
+        case MC_RCMD:
+            return handle_rcmd_key(record);
+    }
+
+    if (record->event.pressed) {
+        if (keycode >= MC_VI01 && keycode <= MC_VI10) {
+            handle_vi_command(keycode);
+            return false;
+        }
+
+        switch (keycode) {
+            case MC_VI11:
+                return handle_vi11_command();
+            case PEEK:
+            case WIN_L:
+            case WIN_R:
+            case SCREEN1:
+            case SCREEN2:
+            case CLEAR:
+            case MOUSE:
+                return handle_utility_command(keycode);
+        }
+    }
+    return true;
 }
