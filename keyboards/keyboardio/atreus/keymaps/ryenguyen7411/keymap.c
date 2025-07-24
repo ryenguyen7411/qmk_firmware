@@ -48,6 +48,7 @@ enum custom_keycodes {
   MC_RCMD,
   MC_S10,
   MC_S11,
+  TERM,
 };
 
 // Tap Dance Definitions
@@ -188,7 +189,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   KC_SLSH,CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,FN2,    FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
@@ -204,7 +205,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
-    _______,_______,_______,MC_VI08,_______,                MC_VI05,_______,MC_VI10,KC_F11, KC_F12,
+    _______,_______,_______,MC_VI08,TERM,                   MC_VI05,_______,MC_VI10,KC_F11, KC_F12,
     _______,_______,_______,_______,MC_VI09,                MC_VI07,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
     _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -341,6 +342,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           layer_on(_FN1);
           layer_off(_FN2);
         }
+        break;
+      case TERM:
+        tap_code16(LCTL(KC_T));
         break;
       default:
         break;
