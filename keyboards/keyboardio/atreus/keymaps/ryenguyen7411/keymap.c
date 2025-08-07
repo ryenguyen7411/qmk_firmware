@@ -57,6 +57,7 @@ enum custom_keycodes {
 // =============================================================================
 
 enum tap_dances {
+    TD_FN_SCLN,
     TD_FN_VI12,
     TD_FN_FN2,
 };
@@ -75,6 +76,7 @@ enum tap_dances {
 #define DOCK C(KC_F3)
 #define PASTE G(KC_V)
 
+#define TD_SCLN TD(TD_FN_SCLN)
 #define TD_VI12 TD(TD_FN_VI12)
 
 // TAP DANCE IMPLEMENTATION
@@ -124,6 +126,7 @@ void td_fn2_reset(tap_dance_state_t *state, void *user_data) {
 
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
+    [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
     [TD_FN_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
     [TD_FN_FN2]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
 };
@@ -197,7 +200,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN2] = LAYOUT(
     KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,
-    KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, KC_SCLN,KC_QUOT,KC_BSLS,
+    KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, TD_SCLN,KC_QUOT,KC_BSLS,
     _______,_______,_______,_______,_______,MC_VI11,_______,KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
