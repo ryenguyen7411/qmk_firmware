@@ -17,8 +17,9 @@
 #include QMK_KEYBOARD_H
 
 // =============================================================================
-// LAYER DEFINITIONS
+// LAYER + KEYCODES DEFINITIONS
 // =============================================================================
+
 enum layer_names {
     _BASE,
     _FN1,
@@ -27,9 +28,6 @@ enum layer_names {
     _FN4,
 };
 
-// =============================================================================
-// CUSTOM KEYCODES & MACROS
-// =============================================================================
 enum custom_keycodes {
     MC_VI01 = SAFE_RANGE,
     MC_VI02,
@@ -57,9 +55,8 @@ enum custom_keycodes {
 // =============================================================================
 // TAP DANCE CONFIGURATION
 // =============================================================================
+
 enum tap_dances {
-    TD_FN_SCLN,
-    TD_FN_QUOT,
     TD_FN_VI12,
     TD_FN_FN2,
 };
@@ -78,8 +75,6 @@ enum tap_dances {
 #define DOCK C(KC_F3)
 #define PASTE G(KC_V)
 
-#define TD_SCLN TD(TD_FN_SCLN)
-#define TD_QUOT TD(TD_FN_QUOT)
 #define TD_VI12 TD(TD_FN_VI12)
 
 // TAP DANCE IMPLEMENTATION
@@ -129,8 +124,6 @@ void td_fn2_reset(tap_dance_state_t *state, void *user_data) {
 
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-    [TD_FN_QUOT] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQT),
     [TD_FN_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
     [TD_FN_FN2]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
 };
@@ -138,29 +131,6 @@ tap_dance_action_t tap_dance_actions[] = {
 // =============================================================================
 // KEY OVERRIDES
 // =============================================================================
-
-typedef struct {
-    uint8_t  mods;
-    uint16_t trigger;
-    uint16_t replacement;
-    uint8_t  layers;
-    uint8_t  negmods;
-} key_override_config_t;
-
-static const key_override_config_t cmd_overrides[] = {
-    {MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S), ~0, 0}, {MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D), ~0, 0}, {MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_L, G(KC_G), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_L, G(KC_H), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_D, G(KC_J), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K), ~0, 0}, {MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L), ~0, 0}, {MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W), ~0, 0}, {MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T), ~0, 0}, {MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y), ~0, 0}, {MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT},
-};
-
-static const key_override_config_t ctrl_overrides[] = {
-    {MOD_MASK_CTRL, KC_MS_L, C(KC_H), ~0, 0}, {MOD_MASK_CTRL, KC_MS_D, C(KC_J), ~0, 0}, {MOD_MASK_CTRL, KC_MS_U, C(KC_K), ~0, 0}, {MOD_MASK_CTRL, KC_MS_R, C(KC_L), ~0, 0}, {MOD_MASK_CTRL, KC_DEL, C(KC_O), ~0, 0},
-};
-
-static const key_override_config_t gui_overrides[] = {
-    {MOD_MASK_GUI, KC_7, DOCK, ~0, 0},
-    {MOD_MASK_GUI, KC_8, LANG, ~0, 0},
-    {MOD_MASK_GUI, KC_9, KC_DEL, ~0, 0},
-    {MOD_MASK_GUI, KC_0, KC_BSPC, ~0, 0},
-};
 
 const key_override_t ko_cmd_s  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
 const key_override_t ko_cmd_d  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
@@ -185,7 +155,27 @@ const key_override_t ko_9      = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
 const key_override_t ko_0      = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
 const key_override_t *key_overrides[] = {
-    &ko_cmd_s, &ko_cmd_d, &ko_cmd_f, &ko_cmd_g, &ko_cmd_h, &ko_cmd_j, &ko_cmd_k, &ko_cmd_l, &ko_cmd_w, &ko_cmd_t, &ko_cmd_y, &ko_cmd_o, &ko_ctrl_h, &ko_ctrl_j, &ko_ctrl_k, &ko_ctrl_l, &ko_ctrl_o, &ko_7, &ko_8, &ko_9, &ko_0,
+    &ko_cmd_s,
+	&ko_cmd_d,
+	&ko_cmd_f,
+	&ko_cmd_g,
+	&ko_cmd_h,
+	&ko_cmd_j,
+	&ko_cmd_k,
+	&ko_cmd_l,
+	&ko_cmd_w,
+	&ko_cmd_t,
+	&ko_cmd_y,
+	&ko_cmd_o,
+	&ko_ctrl_h,
+	&ko_ctrl_j,
+	&ko_ctrl_k,
+	&ko_ctrl_l,
+	&ko_ctrl_o,
+	&ko_7,
+	&ko_8,
+	&ko_9,
+	&ko_0,
 };
 
 // =============================================================================
@@ -207,7 +197,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN2] = LAYOUT(
     KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,
-    KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, TD_SCLN,TD_QUOT,KC_BSLS,
+    KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, KC_SCLN,KC_QUOT,KC_BSLS,
     _______,_______,_______,_______,_______,MC_VI11,_______,KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -249,6 +239,7 @@ static bool is_ctrl_pressed(void) {
 // =============================================================================
 // KEY PROCESSING HANDLERS
 // =============================================================================
+
 static bool handle_rcmd_key(keyrecord_t *record) {
     if (is_lcmd_pressed) {
         if (record->event.pressed) {
@@ -365,10 +356,8 @@ static bool handle_utility_command(uint16_t keycode) {
         case MOUSE:
             if (is_shift_pressed() || is_ctrl_pressed()) {
                 layer_off(_FN1);
-                layer_off(_FN2);
             } else {
                 layer_on(_FN1);
-                layer_off(_FN2);
             }
             break;
         default:
