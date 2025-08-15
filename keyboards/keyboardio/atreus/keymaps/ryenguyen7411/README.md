@@ -1,4 +1,3 @@
-
 # Ryenguyen7411 Atreus Keymap
 
 This is a custom keymap for the Keyboardio Atreus optimized for:
@@ -30,9 +29,9 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 |-----------------------------|           |-----------------------------|
 |  A  |  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
 |-----------------------------------------------------------------------|
-|Shift|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |  /  |Ctrl |
+|Shift|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |     |Ctrl |
 |-----------------------------------------------------------------------|
-|Ctrl |     | Alt | Cmd | FN2 | FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
+|Ctrl |     | Alt | Cmd |xxxxx| FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
 '-----------------------------------------------------------------------'
 
 - Shift Tap = ESC
@@ -41,6 +40,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 - **FN4 Tap** = Enter
 - **MOUSE Tap** = Enable mouse layer
     > Shift/Ctrl + MOUSE = Disable mouse layer
+    - xxxxx: Key is dead :(
 
 ---
 
@@ -48,7 +48,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 *Hold FN1 or tap MOUSE key to access*
 
 .-----------------------------.           .-----------------------------.
-|     |SlowM|VI12 |VI11 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
+|     |SlowM|     |     |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
 |-----------------------------|           |-----------------------------|
 | Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
 |-----------------------------------------------------------------------|
@@ -70,10 +70,6 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 - **Scr02**: Move window to right screen (Ctrl+Shift+])
 - **Win ◀/▶ (Ctrl ◀/▶)**: Window control shortcuts
 - **Peek**: Mission Control/window overview
-
-### Vim Commands:
-- **VI11**: Vim Save (ESC + <leader> + w)
-- **VI12**: Vim Force Quit (ESC + <leader> + qq)
 
 *Requires BetterTouchTool for screen movement shortcuts*
 
@@ -103,9 +99,9 @@ Numbers 1-0 on top row, with common symbols and modifiers positioned for easy pr
 *Hold FN3 to access*
 
 .-----------------------------.           .-----------------------------.
-|     |     |     |VI08 |     |           |VI05 |     |VI10 | F11 | F12 |
+|     |     |VI07 |VI08 |     |           |VI05 |     |VI10 |     |     |
 |-----------------------------|           |-----------------------------|
-|     |     |     |     |VI09 |           |VI07 |VI03 |VI06 |VI02 |VI01 |
+|     |     |     |     |VI09 |           |     |VI03 |VI06 |VI02 |VI01 |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |VI04 |     |     |     |PASTE|
 |-----------------------------------------------------------------------|
@@ -124,7 +120,7 @@ Numbers 1-0 on top row, with common symbols and modifiers positioned for easy pr
 - **VI09**: DiffviewFileHistory (f)
 - **VI10**: Notes (i)
 
-*Optimized for Neovim with telescope and other plugins*
+*Optimized for Neovim with Snacks and other plugins*
 
 ---
 
@@ -136,33 +132,14 @@ Numbers 1-0 on top row, with common symbols and modifiers positioned for easy pr
 |-----------------------------|           |-----------------------------|
 |     |     |CLEAR| F11 | F12 |           |Bri▼ |Bri▲ |Vol▼ |Vol▲ |     |
 |-----------------------------------------------------------------------|
-|     |     |     |HTML |     |     |RESET|     |     |Mute |     |     |
+|     |     |     |HTML |     |     |     |     |     |Mute |     |     |
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |     |     |     |     |     |     |     |
+|     |RESET|     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
 
 - **CLEAR**: Terminal clear (Ctrl + ` + Ctrl + L)
 - **HTML**: Copy as HTML (Cmd + Shift + C)
 - **RESET**: Reset keyboard firmware
-
----
-
-## COMMON WORKFLOWS
-
-### Quick Vim Operations:
-1. **Save file**: Hold FN2 → VI11
-2. **Force quit**: Tap E twice on MOUSE layer
-3. **Find files**: Hold FN3 → VI01
-
-### Window Management:
-1. **Enable mouse mode**: Tap MOUSE key
-2. **Move between screens**: Hold FN1 → Scr01/Scr02
-3. **Window overview**: Hold FN1 → PEEK
-
-### Programming:
-1. **Access numbers**: Hold FN2 for number row
-2. **Terminal shortcuts**: Hold FN4 → CLEAR
-3. **Function keys**: Hold FN4 for F1-F12
 
 ---
 
@@ -173,16 +150,17 @@ Numbers 1-0 on top row, with common symbols and modifiers positioned for easy pr
 When on the MOUSE layer (FN1), holding modifier keys changes what certain keys do:
 
 ### Command Key Overrides:
-- Cmd + Mouse Wheel Right = Cmd + S (Save)
-- Cmd + Mouse Wheel Up = Cmd + D (Duplicate)
-- Cmd + Mouse Wheel Down = Cmd + F (Find)
-- Cmd + Mouse Left = Cmd + G/H (depending on context)
+- Cmd + Mouse Wheel Right = Cmd + S
+- Cmd + Mouse Wheel Up = Cmd + D
+- Cmd + Mouse Wheel Down = Cmd + F
+- Cmd + Mouse Wheel Left = Cmd + G
+- Cmd + Mouse Left = Cmd + H
 - Cmd + Mouse Down = Cmd + J
 - Cmd + Mouse Up = Cmd + K
 - Cmd + Mouse Right = Cmd + L
-- Cmd + Mouse Button 1 = Cmd + T (New Tab)
-- Cmd + Mouse Button 2 = Cmd + Y (Redo)
-- Cmd + Delete = Cmd + O (Open)
+- Cmd + Mouse Button 1 = Cmd + T
+- Cmd + Mouse Button 2 = Cmd + Y
+- Cmd + Delete = Cmd + O
 
 ### Control Key Overrides:
 - Ctrl + Mouse Left = Ctrl + H
@@ -192,10 +170,10 @@ When on the MOUSE layer (FN1), holding modifier keys changes what certain keys d
 - Ctrl + Delete = Ctrl + O
 
 ### GUI Key Overrides (on NUMBERS layer):
-- Gui + 7 = Dock (Ctrl + F3)
-- Gui + 8 = Language Toggle (Ctrl + Space)
-- Gui + 9 = Delete
-- Gui + 0 = Backspace
+- Cmd + 7 = Dock (Ctrl + F3)
+- Cmd + 8 = Language Toggle (Ctrl + Space)
+- Cmd + 9 = Delete
+- Cmd + 0 = Backspace
 
 ---
 
@@ -205,7 +183,7 @@ When on the MOUSE layer (FN1), holding modifier keys changes what certain keys d
 - QMK firmware environment
 - macOS (keymap optimized for macOS shortcuts)
 - BetterTouchTool (optional, for screen movement shortcuts)
-- Neovim with telescope plugin (for Vim commands)
+- Neovim with Snacks plugin (for Vim commands)
 
 ## Building and Flashing
 
@@ -220,7 +198,7 @@ qmk flash -kb keyboardio/atreus -km ryenguyen7411
 ## Quick Start Guide
 
 1. **Start typing** - Base layer works like normal QWERTY
-2. **Try mouse control** - Tap MOUSE key, then use M ◀/▼/▲/▶ keys
+2. **Try mouse control** - Tap MOUSE key, then use M ◀/▼/▲/▶ keys. Hold Shift/Ctrl + MOUSE to disable mouse layer.
 3. **Access numbers** - Hold FN2 for number row
 4. **Use Vim shortcuts** - Hold FN3 for quick Vim commands
 5. **Function keys** - Hold FN4 for F-keys and media controls
