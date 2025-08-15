@@ -40,6 +40,8 @@ enum custom_keycodes {
     MC_VI09,
     MC_VI10,
     MC_VI11,
+    MC_VI12,
+    MC_VI13,
     SCREEN1,
     SCREEN2,
     PEEK,
@@ -205,7 +207,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
-    _______,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,_______,_______,
+    _______,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI12,MC_VI13,
     _______,_______,_______,_______,MC_VI09,                _______,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
     _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -292,6 +294,12 @@ static void handle_vi_command(uint16_t keycode) {
             break;
         case MC_VI10:
             SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
+            break;
+        case MC_VI12:
+            SEND_STRING("`" SS_DELAY(50) "o");
+            break;
+        case MC_VI13:
+            SEND_STRING("`" SS_DELAY(50) "p");
             break;
     }
 }
@@ -383,7 +391,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     if (record->event.pressed) {
-        if (keycode >= MC_VI01 && keycode <= MC_VI10) {
+        if ((keycode >= MC_VI01 && keycode <= MC_VI10) || keycode == MC_VI12 || keycode == MC_VI13) {
             handle_vi_command(keycode);
             return false;
         }
