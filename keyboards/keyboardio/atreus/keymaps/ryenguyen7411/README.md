@@ -48,7 +48,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 *Hold FN1 or tap MOUSE key to access*
 
 .-----------------------------.           .-----------------------------.
-|     |SlowM|     |     |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
+|     |SlowM|     |VI11 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
 |-----------------------------|           |-----------------------------|
 | Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
 |-----------------------------------------------------------------------|
