@@ -191,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   KC_LSFT,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
@@ -224,7 +224,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // GLOBAL STATE & HELPER FUNCTIONS
 // =============================================================================
 
-static bool is_lcmd_pressed = false;
+static bool     is_lcmd_pressed = false;
+static uint16_t rcmd_timer = 0;
+static bool     rcmd_held = false;
+static uint8_t post_rcmd_count = 0;
+static bool post_rcmd_counting = false;
 static bool is_lgui_pressed(void) {
     return get_mods() & MOD_BIT(KC_LGUI);
 }
@@ -255,9 +259,19 @@ static bool handle_rcmd_key(keyrecord_t *record) {
         return false;
     } else {
         if (record->event.pressed) {
+            rcmd_timer = timer_read();
+            rcmd_held = true;
             register_code(KC_RCMD);
         } else {
-            unregister_code(KC_RCMD);
+            if (rcmd_held) {
+                uint16_t elapsed = timer_elapsed(rcmd_timer);
+                if (elapsed < TAPPING_TERM) {
+                    layer_off(_FN1);
+                    post_rcmd_counting = true;
+                    post_rcmd_count = 0;                }
+                unregister_code(KC_RCMD);
+                rcmd_held = false;
+            }
         }
     }
     return true;
@@ -382,6 +396,25 @@ static bool handle_utility_command(uint16_t keycode) {
 // =============================================================================
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Handle post-RCMD counting logic
+    if (post_rcmd_counting && record->event.pressed) {
+        if (keycode == KC_ESC || keycode == SHFTESC) {
+            // ESC pressed - immediately return to FN1 layer
+            layer_on(_FN1);
+            post_rcmd_counting = false;
+            post_rcmd_count = 0;
+        } else if (keycode != KC_LSFT && keycode != KC_RSFT && keycode != SHFTESC) {
+            // Non-shift key pressed - increment counter
+            post_rcmd_count++;
+            if (post_rcmd_count >= 3) {
+                // 3 keys pressed - return to FN1 layer
+                layer_on(_FN1);
+                post_rcmd_counting = false;
+                post_rcmd_count = 0;
+            }
+        }
+        // Continue processing the key normally
+    }
     switch (keycode) {
         case KC_LCMD:
             is_lcmd_pressed = record->event.pressed;
