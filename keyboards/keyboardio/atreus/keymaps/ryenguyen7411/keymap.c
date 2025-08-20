@@ -41,7 +41,8 @@ enum custom_keycodes {
     MC_VI10,
     MC_VI11,
     MC_VI12,
-    MC_VI13,
+    MC_VI99,
+
     SCREEN1,
     SCREEN2,
     PEEK,
@@ -60,26 +61,21 @@ enum custom_keycodes {
 
 enum tap_dances {
     TD_FN_SCLN,
-    TD_FN_VI12,
-    TD_FN_FN2,
 };
 
 #define FN1 LT(_FN1, KC_SPACE)
-#define FN2 TD(TD_FN_FN2)
+#define FN2 LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
 
 #define SHFTESC LSFT_T(KC_ESC)
 #define CTRLESC RCTL_T(KC_ESC)
 #define LANG C(KC_SPACE)
-/* #define WIN_L C(KC_LEFT) */
-/* #define WIN_R C(KC_RIGHT) */
 #define HTML G(S(KC_C))
 #define DOCK C(KC_F3)
 #define PASTE G(KC_V)
 
 #define TD_SCLN TD(TD_FN_SCLN)
-#define TD_VI12 TD(TD_FN_VI12)
 
 // TAP DANCE IMPLEMENTATION
 
@@ -89,7 +85,7 @@ typedef struct {
     td_tap_t state;
 } td_state_t;
 
-static td_state_t td_tap_state = {.state = TD_NONE};
+// static td_state_t td_tap_state = {.state = TD_NONE};
 
 td_tap_t td_get_state(tap_dance_state_t *state) {
     if (state->count == 1) {
@@ -101,36 +97,9 @@ td_tap_t td_get_state(tap_dance_state_t *state) {
     return TD_DOUBLE_TAP;
 }
 
-void td_vi12(tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1)
-        tap_code(KC_E);
-    else
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "qq");
-}
-
-void td_fn2_finished(tap_dance_state_t *state, void *user_data) {
-    td_tap_state.state = td_get_state(state);
-    if (td_tap_state.state == TD_SINGLE_TAP) {
-        if (!layer_state_is(_FN2)) tap_code(KC_SPACE);
-    } else if (td_tap_state.state == TD_SINGLE_HOLD)
-        layer_on(_FN2);
-    else if (td_tap_state.state == TD_DOUBLE_TAP)
-        layer_on(_FN2);
-}
-
-void td_fn2_reset(tap_dance_state_t *state, void *user_data) {
-    if (td_tap_state.state == TD_SINGLE_TAP)
-        layer_off(_FN2);
-    else if (td_tap_state.state == TD_SINGLE_HOLD)
-        layer_off(_FN2);
-    td_tap_state.state = TD_NONE;
-}
-
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-    [TD_FN_VI12] = ACTION_TAP_DANCE_FN(td_vi12),
-    [TD_FN_FN2]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_fn2_finished, td_fn2_reset),
 };
 
 // =============================================================================
@@ -191,11 +160,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
     KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
-    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   KC_LSFT,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
+    SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
-    _______,KC_ACL0,_______,MC_VI11,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
+    _______,KC_ACL0,_______,MC_VI99,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
     MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
     _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -203,11 +172,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FN2] = LAYOUT(
     KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,
     KC_LCMD,KC_LSFT,KC_LOPT,KC_GRV, KC_TAB,                 KC_MINS,KC_EQL, TD_SCLN,KC_QUOT,KC_BSLS,
-    _______,_______,_______,_______,_______,MC_VI11,_______,KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
+    _______,_______,_______,_______,_______,MC_VI99,_______,KC_LBRC,KC_COMM,KC_DOT, KC_SLSH,KC_RBRC,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
-    _______,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI12,MC_VI13,
+    _______,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI11,MC_VI12,
     _______,_______,_______,_______,MC_VI09,                _______,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
     _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -224,11 +193,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // GLOBAL STATE & HELPER FUNCTIONS
 // =============================================================================
 
-static bool     is_lcmd_pressed = false;
-static uint16_t rcmd_timer = 0;
-static bool     rcmd_held = false;
-static uint8_t post_rcmd_count = 0;
-static bool post_rcmd_counting = false;
 static bool is_lgui_pressed(void) {
     return get_mods() & MOD_BIT(KC_LGUI);
 }
@@ -250,7 +214,7 @@ static bool is_ctrl_pressed(void) {
 // =============================================================================
 
 static bool handle_rcmd_key(keyrecord_t *record) {
-    if (is_lcmd_pressed) {
+    if (is_lgui_pressed()) {
         if (record->event.pressed) {
             register_code(KC_A);
         } else {
@@ -259,19 +223,9 @@ static bool handle_rcmd_key(keyrecord_t *record) {
         return false;
     } else {
         if (record->event.pressed) {
-            rcmd_timer = timer_read();
-            rcmd_held = true;
             register_code(KC_RCMD);
         } else {
-            if (rcmd_held) {
-                uint16_t elapsed = timer_elapsed(rcmd_timer);
-                if (elapsed < TAPPING_TERM) {
-                    layer_off(_FN1);
-                    post_rcmd_counting = true;
-                    post_rcmd_count = 0;                }
-                unregister_code(KC_RCMD);
-                rcmd_held = false;
-            }
+            unregister_code(KC_RCMD);
         }
     }
     return true;
@@ -309,16 +263,16 @@ static void handle_vi_command(uint16_t keycode) {
         case MC_VI10:
             SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
             break;
-        case MC_VI12:
+        case MC_VI11:
             SEND_STRING("`" SS_DELAY(50) "o");
             break;
-        case MC_VI13:
+        case MC_VI12:
             SEND_STRING("`" SS_DELAY(50) "p");
             break;
     }
 }
 
-static bool handle_vi11_command(void) {
+static bool handle_vi99_command(void) {
     if (is_lgui_pressed()) {
         SEND_STRING("r");
     } else if (is_rgui_pressed()) {
@@ -396,42 +350,42 @@ static bool handle_utility_command(uint16_t keycode) {
 // =============================================================================
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // Handle post-RCMD counting logic
-    if (post_rcmd_counting && record->event.pressed) {
-        if (keycode == KC_ESC || keycode == SHFTESC) {
-            // ESC pressed - immediately return to FN1 layer
-            layer_on(_FN1);
-            post_rcmd_counting = false;
-            post_rcmd_count = 0;
-        } else if (keycode != KC_LSFT && keycode != KC_RSFT && keycode != SHFTESC) {
-            // Non-shift key pressed - increment counter
-            post_rcmd_count++;
-            if (post_rcmd_count >= 3) {
-                // 3 keys pressed - return to FN1 layer
-                layer_on(_FN1);
-                post_rcmd_counting = false;
-                post_rcmd_count = 0;
+    // Turn off FN1 layer when specific keys are pressed
+    if (record->event.pressed) {
+        // Turn off FN1 when ` or z is pressed
+        if (keycode == KC_GRV || keycode == KC_Z) {
+            if (layer_state_is(_FN1)) {
+                layer_off(_FN1);
             }
         }
-        // Continue processing the key normally
+        // Turn off FN1 when Cmd+Space is pressed
+        else if ((get_mods() & MOD_MASK_GUI) && keycode == KC_SPACE) {
+            if (layer_state_is(_FN1)) {
+                layer_off(_FN1);
+            }
+        }
+        // Turn off FN1 layer when Ctrl+C or Ctrl+L is pressed
+        else if ((get_mods() & MOD_MASK_CTRL) && (keycode == KC_Z || keycode == KC_C || keycode == KC_MS_R)) {
+            if (layer_state_is(_FN1)) {
+                layer_off(_FN1);
+            }
+        }
     }
+
     switch (keycode) {
-        case KC_LCMD:
-            is_lcmd_pressed = record->event.pressed;
-            break;
         case MC_RCMD:
             return handle_rcmd_key(record);
     }
 
     if (record->event.pressed) {
-        if ((keycode >= MC_VI01 && keycode <= MC_VI10) || keycode == MC_VI12 || keycode == MC_VI13) {
+        if (keycode >= MC_VI01 && keycode <= MC_VI12) {
             handle_vi_command(keycode);
             return false;
         }
 
         switch (keycode) {
-            case MC_VI11:
-                return handle_vi11_command();
+            case MC_VI99:
+                return handle_vi99_command();
             case PEEK:
             case WIN_L:
             case WIN_R:

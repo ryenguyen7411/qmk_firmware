@@ -29,7 +29,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 |-----------------------------|           |-----------------------------|
 |  A  |  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
 |-----------------------------------------------------------------------|
-|Shift|  Z  |  X  |  C  |  V  |Shift|MOUSE|  B  |  N  |  M  |     |Ctrl |
+|Shift|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |     |Ctrl |
 |-----------------------------------------------------------------------|
 |Ctrl |     | Alt | Cmd |xxxxx| FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
 '-----------------------------------------------------------------------'
@@ -48,7 +48,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 *Hold FN1 or tap MOUSE key to access*
 
 .-----------------------------.           .-----------------------------.
-|     |SlowM|     |VI11 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
+|     |SlowM|     |VI99 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
 |-----------------------------|           |-----------------------------|
 | Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
 |-----------------------------------------------------------------------|
@@ -83,7 +83,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 |-----------------------------|           |-----------------------------|
 | Cmd |Shift| Alt |  ~  | Tab |           |  -  |  =  |  ;  |  '  |  \  |
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |VI11 |     | 〚  |  ,  |  .  |  /  |  〛 |
+|     |     |     |     |     |VI99 |     | 〚  |  ,  |  .  |  /  |  〛 |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
@@ -91,7 +91,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 Numbers 1-0 on top row, with common symbols and modifiers positioned for easy programming workflows.
 
 ### Vim Commands:
-- **VI11**: Vim Save (ESC + <leader> + w)
+- **VI99**: Vim Save (ESC + <leader> + w)
 
 ---
 
@@ -99,7 +99,7 @@ Numbers 1-0 on top row, with common symbols and modifiers positioned for easy pr
 *Hold FN3 to access*
 
 .-----------------------------.           .-----------------------------.
-|     |     |VI07 |VI08 |     |           |VI05 |     |VI10 |VI12 |VI13 |
+|     |     |VI07 |VI08 |     |           |VI05 |     |VI10 |VI11 |VI12 |
 |-----------------------------|           |-----------------------------|
 |     |     |     |     |VI09 |           |     |VI03 |VI06 |VI02 |VI01 |
 |-----------------------------------------------------------------------|
@@ -119,8 +119,10 @@ Numbers 1-0 on top row, with common symbols and modifiers positioned for easy pr
 - **VI08**: DiffviewOpen (r)
 - **VI09**: DiffviewFileHistory (f)
 - **VI10**: Notes (i)
+- VI11: Opencode (Tmux <leader> + o)
+- VI12: Cursor (Tmux <leader> + q)
 
-*Optimized for Neovim with Snacks and other plugins*
+*Optimized for Tmux, Neovim with Snacks, Diffview and other plugins*
 
 ---
 
