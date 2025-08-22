@@ -61,7 +61,6 @@ enum custom_keycodes {
 
 enum tap_dances {
     TD_FN_SCLN,
-    TD_FN_H,
 };
 
 #define FN1 LT(_FN1, KC_SPACE)
@@ -77,7 +76,6 @@ enum tap_dances {
 #define PASTE G(KC_V)
 
 #define TD_SCLN TD(TD_FN_SCLN)
-#define TD_H TD(TD_FN_H)
 
 // TAP DANCE IMPLEMENTATION
 
@@ -102,7 +100,6 @@ td_tap_t td_get_state(tap_dance_state_t *state) {
 // Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-    [TD_FN_H] = ACTION_TAP_DANCE_DOUBLE(KC_H, KC_MINS),
 };
 
 // =============================================================================
@@ -164,7 +161,7 @@ const key_override_t *key_overrides[] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
-    KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   TD_H,   KC_J,   KC_K,   KC_L,   FN4,
+    KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
     SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   _______,MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
@@ -357,26 +354,20 @@ static bool handle_utility_command(uint16_t keycode) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Turn off FN1 layer when specific keys are pressed
     if (record->event.pressed) {
-        // Turn off FN1 when ` or z is pressed
-        if (keycode == KC_GRV || keycode == KC_Z) {
+        // Turn off FN1 when ` or z is pressed (only if no modifiers are pressed)
+        if ((keycode == KC_GRV || keycode == KC_Z) && get_mods() == 0) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
         }
-        // Turn off FN1 when Cmd+Space is pressed
-        else if ((get_mods() & MOD_MASK_GUI) && keycode == KC_SPACE) {
-            if (layer_state_is(_FN1)) {
-                layer_off(_FN1);
-            }
-        }
-        // Turn off FN1 layer when Ctrl+C or Ctrl+L is pressed
+        // Turn off FN1 layer when Ctrl+Z, Ctrl+C or Ctrl+L is pressed
         else if ((get_mods() & MOD_MASK_CTRL) && (keycode == KC_Z || keycode == KC_C || keycode == KC_MS_R)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
         }
-        // Toggle FN1 layer when Cmd+L or Cmd+F is pressed
-        else if ((get_mods() & MOD_MASK_GUI) && (keycode == KC_WH_D || keycode == KC_MS_R)) {
+        // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed
+        else if ((get_mods() & MOD_MASK_GUI) && (keycode == KC_WH_D || keycode == KC_MS_R || keycode == KC_SPACE)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
