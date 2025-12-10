@@ -361,13 +361,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         }
         // Turn off FN1 layer when Ctrl+Z, Ctrl+C or Ctrl+L is pressed
-        else if ((get_mods() & MOD_MASK_CTRL) && (keycode == KC_Z || keycode == KC_C || keycode == KC_MS_R)) {
+        else if ((get_mods() == MOD_BIT(KC_LCTL) || get_mods() == MOD_BIT(KC_RCTL)) && (keycode == KC_Z || keycode == KC_C || keycode == KC_MS_R)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
         }
-        // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed
-        else if ((get_mods() & MOD_MASK_GUI) && (keycode == KC_WH_D || keycode == KC_MS_R || keycode == KC_SPACE)) {
+        // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed (only with Cmd alone, no other modifiers)
+        else if ((get_mods() == MOD_BIT(KC_LCMD) || get_mods() == MOD_BIT(KC_RCMD)) && (keycode == KC_WH_D || keycode == KC_MS_R || keycode == KC_BTN1 || keycode == FN1 || keycode == FN2 || keycode == FN3)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
