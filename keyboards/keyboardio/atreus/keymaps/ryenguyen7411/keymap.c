@@ -266,10 +266,10 @@ static void handle_vi_command(uint16_t keycode) {
             SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
             break;
         case MC_VI11:
-            SEND_STRING("`" SS_DELAY(50) "o");
+            SEND_STRING(SS_LCTL("o"));
             break;
         case MC_VI12:
-            SEND_STRING("`" SS_DELAY(50) "p");
+            SEND_STRING(SS_LCTL("p"));
             break;
     }
 }
