@@ -366,8 +366,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(_FN1);
             }
         }
-        // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed (only with Cmd alone, no other modifiers)
-        else if ((get_mods() == MOD_BIT(KC_LCMD) || get_mods() == MOD_BIT(KC_RCMD)) && (keycode == KC_WH_D || keycode == KC_MS_R || keycode == KC_BTN1 || keycode == FN1 || keycode == FN2 || keycode == FN3)) {
+        // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed (only with left Cmd alone, no other modifiers)
+        else if ((get_mods() == MOD_BIT(KC_LCMD)) && (keycode == KC_WH_D || keycode == KC_MS_R || keycode == KC_BTN1 || keycode == FN1 || keycode == FN2 || keycode == FN3)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
