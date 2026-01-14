@@ -118,6 +118,7 @@ const key_override_t ko_cmd_w  = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W
 const key_override_t ko_cmd_t  = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
 const key_override_t ko_cmd_y  = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
 const key_override_t ko_cmd_o  = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
+const key_override_t ko_ctrl_d = ko_make_basic(MOD_MASK_CTRL, KC_WH_U, C(KC_D));
 const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, KC_MS_L, C(KC_H));
 const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, KC_MS_D, C(KC_J));
 const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, KC_MS_U, C(KC_K));
