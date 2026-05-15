@@ -107,25 +107,25 @@ tap_dance_action_t tap_dance_actions[] = {
 // KEY OVERRIDES
 // =============================================================================
 
-const key_override_t ko_cmd_s  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_R, G(KC_S));
-const key_override_t ko_cmd_d  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_U, G(KC_D));
-const key_override_t ko_cmd_f  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_D, G(KC_F));
-const key_override_t ko_cmd_g  = ko_make_basic(MOD_BIT(KC_LCMD), KC_WH_L, G(KC_G));
-const key_override_t ko_cmd_h  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_L, G(KC_H));
-const key_override_t ko_cmd_j  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_D, G(KC_J));
-const key_override_t ko_cmd_k  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_U, G(KC_K));
-const key_override_t ko_cmd_l  = ko_make_basic(MOD_BIT(KC_LCMD), KC_MS_R, G(KC_L));
-const key_override_t ko_cmd_w  = ko_make_basic(MOD_BIT(KC_LCMD), KC_ACL0, G(KC_W));
-const key_override_t ko_cmd_t  = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN1, G(KC_T));
-const key_override_t ko_cmd_y  = ko_make_basic(MOD_BIT(KC_LCMD), KC_BTN2, G(KC_Y));
+const key_override_t ko_cmd_s  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLR, G(KC_S));
+const key_override_t ko_cmd_d  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLU, G(KC_D));
+const key_override_t ko_cmd_f  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLD, G(KC_F));
+const key_override_t ko_cmd_g  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLL, G(KC_G));
+const key_override_t ko_cmd_h  = ko_make_basic(MOD_BIT(KC_LCMD), MS_LEFT, G(KC_H));
+const key_override_t ko_cmd_j  = ko_make_basic(MOD_BIT(KC_LCMD), MS_DOWN, G(KC_J));
+const key_override_t ko_cmd_k  = ko_make_basic(MOD_BIT(KC_LCMD), MS_UP, G(KC_K));
+const key_override_t ko_cmd_l  = ko_make_basic(MOD_BIT(KC_LCMD), MS_RGHT, G(KC_L));
+const key_override_t ko_cmd_w  = ko_make_basic(MOD_BIT(KC_LCMD), MS_ACL0, G(KC_W));
+const key_override_t ko_cmd_t  = ko_make_basic(MOD_BIT(KC_LCMD), MS_BTN1, G(KC_T));
+const key_override_t ko_cmd_y  = ko_make_basic(MOD_BIT(KC_LCMD), MS_BTN2, G(KC_Y));
 const key_override_t ko_cmd_o  = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
-const key_override_t ko_ctrl_d = ko_make_basic(MOD_MASK_CTRL, KC_WH_U, C(KC_D));
-const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, KC_MS_L, C(KC_H));
-const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, KC_MS_D, C(KC_J));
-const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, KC_MS_U, C(KC_K));
-const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, KC_MS_R, C(KC_L));
+const key_override_t ko_ctrl_d = ko_make_basic(MOD_MASK_CTRL, MS_WHLU, C(KC_D));
+const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, MS_LEFT, C(KC_H));
+const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, MS_DOWN, C(KC_J));
+const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, MS_UP, C(KC_K));
+const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, MS_RGHT, C(KC_L));
 const key_override_t ko_ctrl_o = ko_make_basic(MOD_MASK_CTRL, KC_DEL, C(KC_O));
-const key_override_t ko_cmd_shift_f = ko_make_basic(MOD_MASK_CS, KC_WH_D, C(S(KC_F)));
+const key_override_t ko_cmd_shift_f = ko_make_basic(MOD_MASK_CS, MS_WHLD, C(S(KC_F)));
 const key_override_t ko_7      = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
 const key_override_t ko_8      = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
 const key_override_t ko_9      = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
@@ -168,8 +168,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
-    _______,KC_ACL0,WIDG,   MC_VI99,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
-    MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
+    _______,MS_ACL0,WIDG,   MC_VI99,MS_BTN1,                MS_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
+    MC_RCMD,MS_WHLR,MS_WHLU,MS_WHLD,MS_WHLL,                MS_LEFT,MS_DOWN,MS_UP,  MS_RGHT,_______,
     _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -363,13 +363,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         }
         // Turn off FN1 layer when Ctrl+Z, Ctrl+C or Ctrl+L is pressed
-        else if ((get_mods() == MOD_BIT(KC_LCTL) || get_mods() == MOD_BIT(KC_RCTL)) && (keycode == KC_Z || keycode == KC_C || keycode == KC_MS_R)) {
+        else if ((get_mods() == MOD_BIT(KC_LCTL) || get_mods() == MOD_BIT(KC_RCTL)) && (keycode == KC_Z || keycode == KC_C || keycode == MS_RGHT)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
         }
         // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed (only with left Cmd alone, no other modifiers)
-        else if ((get_mods() == MOD_BIT(KC_LCMD)) && (keycode == KC_WH_D || keycode == KC_MS_R || keycode == KC_BTN1 || keycode == FN1 || keycode == FN2 || keycode == FN3)) {
+        else if ((get_mods() == MOD_BIT(KC_LCMD)) && (keycode == MS_WHLD || keycode == MS_RGHT || keycode == MS_BTN1 || keycode == FN1 || keycode == FN2 || keycode == FN3)) {
             if (layer_state_is(_FN1)) {
                 layer_off(_FN1);
             }
