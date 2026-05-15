@@ -73,6 +73,7 @@ enum tap_dances {
 #define LANG C(KC_SPACE)
 #define HTML G(S(KC_C))
 #define DOCK C(KC_F3)
+#define WIDG C(S(KC_Z))
 #define PASTE G(KC_V)
 
 #define TD_SCLN TD(TD_FN_SCLN)
@@ -167,7 +168,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
-    _______,KC_ACL0,_______,MC_VI99,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
+    _______,KC_ACL0,WIDG,   MC_VI99,KC_BTN1,                KC_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
     MC_RCMD,KC_WH_R,KC_WH_U,KC_WH_D,KC_WH_L,                KC_MS_L,KC_MS_D,KC_MS_U,KC_MS_R,_______,
     _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______

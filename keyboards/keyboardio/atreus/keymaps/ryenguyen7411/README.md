@@ -48,7 +48,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 *Hold FN1 or tap MOUSE key to access*
 
 .-----------------------------.           .-----------------------------.
-|     |SlowM|     |VI99 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
+|     |SlowM|Widg |VI99 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
 |-----------------------------|           |-----------------------------|
 | Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
 |-----------------------------------------------------------------------|
@@ -63,6 +63,7 @@ This keymap uses **layers** - think of them as different keyboard modes you can 
 - **M ◀/▼/▲/▶**: Mouse movement
 - **Clk ◀/▶**: Mouse click left/right
 - **Dock**: Show/hide dock (Ctrl+F3)
+- **Widg**: Show/hide widgets (Ctrl+Shift+Z)
 - **Lang**: Switch input language (Ctrl+Space)
 
 ### Window Management:
