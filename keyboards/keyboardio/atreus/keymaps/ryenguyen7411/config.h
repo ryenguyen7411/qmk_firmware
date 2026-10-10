@@ -25,13 +25,18 @@
 
 #define MOUSEKEY_DELAY 10
 #define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_MAX_SPEED 7
+#define MOUSEKEY_MOVE_DELTA 4   // first step 4px instead of 8 for finer small moves
+#define MOUSEKEY_MAX_SPEED 14   // top speed = MOVE_DELTA * MAX_SPEED = 56px, same as before
 #define MOUSEKEY_TIME_TO_MAX 16
+#define MOUSEKEY_OVERLAP_RESET  // restart acceleration when changing direction mid-move
 
 #define MOUSEKEY_WHEEL_DELAY 10
 #define MOUSEKEY_WHEEL_INTERVAL 50
 #define MOUSEKEY_WHEEL_MAX_SPEED 4
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 20
+
+// Mouse layer
+#define JUMP_SEQUENCE_TIMEOUT 1000  // a jump key pressed after this many ms starts from the whole screen again
 
 // Tapping Term
 #define TAPPING_TERM 150

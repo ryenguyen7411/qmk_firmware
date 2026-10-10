@@ -214,6 +214,49 @@ static bool is_ctrl_pressed(void) {
 }
 
 // =============================================================================
+// MOUSE LAYER: DIGITIZER JUMP
+// =============================================================================
+
+// MC_RCMD + a mouse direction key jumps instead of moving: each jump keeps one
+// half of the current region and places the cursor at its centre. Jumping after
+// JUMP_SEQUENCE_TIMEOUT starts over from the whole screen.
+static float    jump_x0 = 0, jump_x1 = 1, jump_y0 = 0, jump_y1 = 1;
+static uint32_t jump_timer = 0;
+
+static void handle_jump(uint16_t keycode) {
+    if (timer_elapsed32(jump_timer) > JUMP_SEQUENCE_TIMEOUT) {
+        jump_x0 = jump_y0 = 0;
+        jump_x1 = jump_y1 = 1;
+    }
+    jump_timer = timer_read32();
+
+    float mid_x = (jump_x0 + jump_x1) / 2;
+    float mid_y = (jump_y0 + jump_y1) / 2;
+    switch (keycode) {
+        case MS_LEFT:
+            jump_x1 = mid_x;
+            break;
+        case MS_RGHT:
+            jump_x0 = mid_x;
+            break;
+        case MS_UP:
+            jump_y1 = mid_y;
+            break;
+        case MS_DOWN:
+            jump_y0 = mid_y;
+            break;
+    }
+
+    // Set position and in-range together so the cursor doesn't flick to the old spot first
+    digitizer_state.x        = (jump_x0 + jump_x1) / 2;
+    digitizer_state.y        = (jump_y0 + jump_y1) / 2;
+    digitizer_state.in_range = true;
+    digitizer_state.dirty    = true;
+    digitizer_flush();
+    digitizer_in_range_off();
+}
+
+// =============================================================================
 // KEY PROCESSING HANDLERS
 // =============================================================================
 
@@ -388,6 +431,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
 
         switch (keycode) {
+            case MS_LEFT:
+            case MS_DOWN:
+            case MS_UP:
+            case MS_RGHT:
+                // MC_RCMD holds right Cmd; left Cmd keeps its existing HJKL overrides
+                if (is_rgui_pressed()) {
+                    handle_jump(keycode);
+                    return false;
+                }
+                break;
             case MC_VI99:
                 return handle_vi99_command();
             case PEEK:
