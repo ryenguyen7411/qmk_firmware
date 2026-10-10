@@ -53,6 +53,7 @@ enum custom_keycodes {
     MC_RCMD,
     MC_S10,
     MC_S11,
+    DRAG,
 };
 
 // =============================================================================
@@ -170,7 +171,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FN1] = LAYOUT(
     _______,MS_ACL0,WIDG,   MC_VI99,MS_BTN1,                MS_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
     MC_RCMD,MS_WHLR,MS_WHLU,MS_WHLD,MS_WHLL,                MS_LEFT,MS_DOWN,MS_UP,  MS_RGHT,_______,
-    _______,_______,_______,_______,_______,_______,_______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
+    _______,_______,_______,_______,_______,DRAG,   _______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN2] = LAYOUT(
@@ -214,7 +215,7 @@ static bool is_ctrl_pressed(void) {
 }
 
 // =============================================================================
-// MOUSE LAYER: DIGITIZER JUMP
+// MOUSE LAYER: DIGITIZER JUMP, DRAG LOCK
 // =============================================================================
 
 // MC_RCMD + a mouse direction key jumps instead of moving: each jump keeps one
@@ -254,6 +255,27 @@ static void handle_jump(uint16_t keycode) {
     digitizer_state.dirty    = true;
     digitizer_flush();
     digitizer_in_range_off();
+}
+
+// DRAG holds the left button down until tapped again, a normal click, or leaving the layer
+static bool is_dragging = false;
+
+static void handle_drag(void) {
+    is_dragging = !is_dragging;
+    if (is_dragging) {
+        register_code(MS_BTN1);
+    } else {
+        unregister_code(MS_BTN1);
+    }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    // Never leave the button stuck down after leaving the mouse layer
+    if (is_dragging && !layer_state_cmp(state, _FN1)) {
+        is_dragging = false;
+        unregister_code(MS_BTN1);
+    }
+    return state;
 }
 
 // =============================================================================
@@ -440,6 +462,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     handle_jump(keycode);
                     return false;
                 }
+                break;
+            case DRAG:
+                handle_drag();
+                return false;
+            case MS_BTN1:
+                // A normal click while drag-locked releases the button, so end the lock too
+                is_dragging = false;
                 break;
             case MC_VI99:
                 return handle_vi99_command();
