@@ -1,209 +1,214 @@
-# Ryenguyen7411 Atreus Keymap
+# ryenguyen7411 — Keyboardio Atreus
 
-This is a custom keymap for the Keyboardio Atreus optimized for:
-- **Programming workflow** (Vim integration, coding shortcuts)
-- **macOS productivity** (Cmd key workflows, window management)
-- **Mouse-free computing** (trackpad/mouse control via keyboard)
+macOS keymap for programming without leaving the keyboard: mouse and window control,
+digitizer cursor jumps, and one-key Neovim/tmux shortcuts.
 
-## How This Keymap Works
+```bash
+qmk compile -kb keyboardio/atreus -km ryenguyen7411
+qmk flash   -kb keyboardio/atreus -km ryenguyen7411
+```
 
-This keymap uses **layers** - think of them as different keyboard modes you can switch between:
-- **BASE**: Your normal typing layer
-- **MOUSE** (FN1): Mouse control and window management
-- **NUMBERS** (FN2): Numbers, symbols, and punctuation
-- **VIM** (FN3): Vim editor commands and shortcuts
-- **FUNCTION** (FN4): Function keys and media controls
+Needs macOS. Optional: Neovim with Snacks + Diffview and tmux (FN3).
 
-### Key Behaviors
-- **Tap vs Hold**: Many keys do different things when tapped vs held down
-- **Layer Access**: Hold layer keys (FN1-FN4) to temporarily access that layer
-- **Tap Dance**: Some keys change behavior when double-tapped
-- **Key Overrides**: Holding modifiers (Cmd/Ctrl) changes what certain keys do
+## Layers
+
+| Layer | Reach it by | For |
+|---|---|---|
+| BASE | — | Typing |
+| FN1 Mouse | Hold the right Space thumb, or tap **MOUSE** (stays on) | Mouse, cursor jumps, windows |
+| FN2 Numbers | Hold the left Space thumb | Numbers, symbols |
+| FN3 Vim | Hold the Space key right of FN1 | Neovim / tmux shortcuts |
+| FN4 Function | Hold **FN4** (Enter) | F-keys, media, bootloader |
+
+Blank cells in the diagrams fall through to the base layer.
 
 ---
 
-## BASE LAYOUT
+## BASE
 
-.-----------------------------,           .-----------------------------.
+```
+.-----------------------------.           .-----------------------------.
 |  Q  |  W  |  E  |  R  |  T  |           |  Y  |  U  |  I  |  O  |  P  |
 |-----------------------------|           |-----------------------------|
 |  A  |  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
 |-----------------------------------------------------------------------|
-|Shift|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |     |Ctrl |
+|ShEsc|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |     |CtEsc|
 |-----------------------------------------------------------------------|
-|Ctrl |     | Alt | Cmd |xxxxx| FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
+|Ctrl |     | Opt | Cmd |xxxxx| FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
 '-----------------------------------------------------------------------'
+```
 
-- Shift Tap = ESC
-- Right Ctrl Tap = ESC
-- **FN1,2,3 Tap** = Space
-- **FN4 Tap** = Enter
-- **MOUSE Tap** = Enable mouse layer
-    > Shift/Ctrl + MOUSE = Disable mouse layer
-    - xxxxx: Key is dead :(
+| Key | Tap | Hold |
+|---|---|---|
+| ShEsc | Esc | Left Shift |
+| CtEsc | Esc | Right Ctrl |
+| FN1 / FN2 / FN3 | Space | Layer FN1 / FN2 / FN3 |
+| FN4 | Enter | Layer FN4 |
+| MOUSE | Mouse layer on (stays on) | — |
+| Shift/Ctrl + MOUSE | Mouse layer off | — |
+
+`xxxxx` is a dead switch.
 
 ---
 
-## MOUSE LAYER (FN1)
-*Hold FN1 or tap MOUSE key to access*
+## FN1 — Mouse
 
+```
 .-----------------------------.           .-----------------------------.
-|     |SlowM|Widg |VI99 |Clk ◀|           |Clk ▶|Dock |Lang | Del | <-- |
+|     |Slow |Widg |Save |Clk L|           |Clk R|Dock |Lang | Del |Bspc |
 |-----------------------------|           |-----------------------------|
-| Cmd |MSc ◀|MSc ▼|MSc ▲|MSc ▶|           | M ◀ | M ▼ | M ▲ | M ▶ |     |
+|RCmd |Whl ▶|Whl ▲|Whl ▼|Whl ◀|           | M ◀ | M ▼ | M ▲ | M ▶ |Enter|
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |     |     |Scr01|Peek |Win ◀|Win ▶|Scr02|
+|     |     |     |     |     |DRAG |     |Scr1 |Peek |Win ◀|Win ▶|Scr2 |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
+```
 
-### Mouse & Window Controls:
-- **SlowM**: Slow mouse mode
-- **MSc ◀/▼/▲/▶**: Mouse scroll direction
-- **M ◀/▼/▲/▶**: Mouse movement
-- **Clk ◀/▶**: Mouse click left/right
-- **Dock**: Show/hide dock (Ctrl+F3)
-- **Widg**: Show/hide widgets (Ctrl+Shift+Z)
-- **Lang**: Switch input language (Ctrl+Space)
+| Key | Does |
+|---|---|
+| M ◀ ▼ ▲ ▶ | Move the cursor (accelerates while held) |
+| Slow | Hold for slow, precise movement |
+| Whl ▶ ▲ ▼ ◀ | Scroll wheel right / up / down / left |
+| Clk L / Clk R | Left / right click |
+| RCmd | Right Cmd. Hold it for [cursor jumps](#cursor-jumps). With left Cmd held: A (Cmd+A) |
+| DRAG | [Drag lock](#drag-lock) |
+| Save | Neovim save: Esc, Space, w |
+| Widg | Ctrl+Shift+Z (Notification Centre / widgets) |
+| Dock | Show/hide Dock (Ctrl+F3) |
+| Lang | Switch input language (Ctrl+Space) |
+| Peek | Mission Control (Ctrl+↑) |
+| Win ◀ / Win ▶ | Previous / next Space (Ctrl+← / Ctrl+→) |
+| Scr1 / Scr2 | Window to left / right screen (Cmd+Shift+[ / ]), via BetterTouchTool |
 
-### Window Management:
-- **Scr01**: Move window to left screen (Ctrl+Shift+[)
-- **Scr02**: Move window to right screen (Ctrl+Shift+])
-- **Win ◀/▶ (Ctrl ◀/▶)**: Window control shortcuts
-- **Peek**: Mission Control/window overview
+### Cursor jumps
 
-*Requires BetterTouchTool for screen movement shortcuts*
+Hold **RCmd**, then press M ◀ ▼ ▲ ▶ (H J K L). Each press keeps that half of the
+current area and puts the cursor in its middle:
+
+| While holding RCmd | Cursor at (x, y) |
+|---|---|
+| ◀ | 25%, 50% |
+| ◀ | 12.5%, 50% |
+| ▼ | 12.5%, 75% |
+| Enter | 50%, 50%, and the next jump starts from the whole screen again |
+
+Release and press RCmd again to start over from the whole screen. Jumps use a
+digitizer (absolute position), so they land on the display macOS maps it to,
+normally the main one.
+
+### Drag lock
+
+**DRAG** holds the left button down so you can move the cursor (or jump) while dragging.
+It lets go when you press DRAG again, click Clk L, or leave the mouse layer.
+
+### Leaving the mouse layer
+
+The layer turns itself off when you press keys that usually mean you're about to type:
+
+- `` ` `` or Z with no modifiers
+- Ctrl + Z, C or L
+- Left Cmd (and nothing else) + L, F, T, or any Space key
+- Shift/Ctrl + MOUSE
+
+### Modifier variants
+
+| Key | Alone | Left Cmd or Shift held | Right Cmd held |
+|---|---|---|---|
+| Peek | Ctrl+↑ | `n` (Cmd+N / N) | Cmd+Ctrl+, |
+| Win ◀ | Ctrl+← | `m` (Cmd+M / M) | Cmd+Ctrl+. |
+| Win ▶ | Ctrl+→ | — | Cmd+Ctrl+/ |
+| Scr1 | Cmd+Shift+[ | `b` (Cmd+B / B) | Cmd+[ |
+| Scr2 | Cmd+Shift+] | — | Cmd+] |
+| Save | Esc, Space, w | Left Cmd only: Cmd+R | `r` (Cmd dropped) |
+
+### Key overrides
+
+With **left** Cmd or Ctrl held, mouse keys send the letter printed underneath instead:
+
+| Held | Keys | Sends |
+|---|---|---|
+| Left Cmd | Slow, Whl ▶ ▲ ▼ ◀, Clk L, Clk R, M ◀ ▼ ▲ ▶ | Cmd + W, S D F G, T, Y, H J K L |
+| Left Cmd | Del (not with Shift) | Cmd+O |
+| Ctrl | M ◀ ▼ ▲ ▶, Del | Ctrl + H J K L, O |
+| Ctrl+Shift | Whl ▼ | Ctrl+Shift+F |
+
+Right Cmd + M ◀ ▼ ▲ ▶ is a [cursor jump](#cursor-jumps), not Cmd+H/J/K/L.
 
 ---
 
-## NUMBERS LAYER (FN2)
-*Hold FN2 to access*
+## FN2 — Numbers
 
+```
 .-----------------------------.           .-----------------------------.
 |  1  |  2  |  3  |  4  |  5  |           |  6  |  7  |  8  |  9  |  0  |
 |-----------------------------|           |-----------------------------|
-| Cmd |Shift| Alt |  ~  | Tab |           |  -  |  =  |  ;  |  '  |  \  |
+| Cmd |Shift| Opt |  `  | Tab |           |  -  |  =  | ; : |  '  |  \  |
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |VI99 |     | 〚  |  ,  |  .  |  /  |  〛 |
+|     |     |     |     |     |Save |     |  [  |  ,  |  .  |  /  |  ]  |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
+```
 
-Numbers 1-0 on top row, with common symbols and modifiers positioned for easy programming workflows.
-
-### Vim Commands:
-- **VI99**: Vim Save (ESC + <leader> + w)
+| Key | Does |
+|---|---|
+| `; :` | Tap `;`, double-tap `:` |
+| Save | Same as FN1 Save |
+| Cmd + 7 / 8 / 9 / 0 | Dock / Lang / Delete / Backspace (either Cmd) |
 
 ---
 
-## VIM LAYER (FN3)
-*Hold FN3 to access*
+## FN3 — Vim / tmux
 
+```
 .-----------------------------.           .-----------------------------.
-|     |     |VI07 |VI08 |     |           |VI05 |     |VI10 |VI11 |VI12 |
+|     |     |Emmet|Diff |     |           |Resum|     |Notes|OpenC|Curs |
 |-----------------------------|           |-----------------------------|
-|     |     |     |     |VI09 |           |     |VI03 |VI06 |VI02 |VI01 |
+|     |     |     |     |FHist|           |     |Grep |Brows|Proj |Files|
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |     |     |VI04 |     |     |     |PASTE|
+|     |     |     |     |     |     |     |Bufs |     |     |     |Paste|
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
+```
 
-### Vim Commands (ESC + space + key):
-- **VI01**: Find Files (;)
-- **VI02**: Project (l)
-- **VI03**: Live Grep (j)
-- **VI04**: Buffers (b)
-- **VI05**: Resume picker (')
-- **VI06**: File Browser (k)
-- **VI07**: Emmet Tab (Ctrl+J)
-- **VI08**: DiffviewOpen (r)
-- **VI09**: DiffviewFileHistory (f)
-- **VI10**: Notes (i)
-- VI11: Opencode (Tmux <leader> + o)
-- VI12: Cursor (Tmux <leader> + q)
+Most keys send Esc, then `<leader>` (Space) + a key:
 
-*Optimized for Tmux, Neovim with Snacks, Diffview and other plugins*
+| Key | Sends | Neovim action |
+|---|---|---|
+| Files | `<leader>;` | Find files |
+| Proj | `<leader>l` | Projects |
+| Grep | `<leader>j` | Live grep |
+| Bufs | `<leader>b` | Buffers |
+| Resum | `<leader>'` | Resume picker |
+| Brows | `<leader>k` | File browser |
+| Diff | `<leader>r` | DiffviewOpen |
+| FHist | `<leader>f` | DiffviewFileHistory |
+| Notes | `<leader>i` | Notes |
+| Emmet | Ctrl+J | Emmet expand |
+| OpenC | Ctrl+O | tmux: Opencode |
+| Curs | Ctrl+P | tmux: Cursor |
+| Paste | Cmd+V | |
 
 ---
 
-## FUNCTION LAYER (FN4)
-*Hold FN4 to access*
+## FN4 — Function
 
+```
 .-----------------------------.           .-----------------------------.
 | F1  | F2  | F3  | F4  | F5  |           | F6  | F7  | F8  | F9  | F10 |
 |-----------------------------|           |-----------------------------|
-|     |     |CLEAR| F11 | F12 |           |Bri▼ |Bri▲ |Vol▼ |Vol▲ |     |
+|     |     |Clear| F11 | F12 |           |Bri▼ |Bri▲ |Vol▼ |Vol▲ |     |
 |-----------------------------------------------------------------------|
 |     |     |     |HTML |     |     |     |     |     |Mute |     |     |
 |-----------------------------------------------------------------------|
-|     |RESET|     |     |     |     |     |     |     |     |     |     |
+|     |Boot |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
-
-- **CLEAR**: Terminal clear (Ctrl + ` + Ctrl + L)
-- **HTML**: Copy as HTML (Cmd + Shift + C)
-- **RESET**: Reset keyboard firmware
-
----
-
-# ADVANCED FEATURES
-
-## KEY OVERRIDES
-
-When on the MOUSE layer (FN1), holding modifier keys changes what certain keys do:
-
-### Command Key Overrides:
-- Cmd + Mouse Wheel Right = Cmd + S
-- Cmd + Mouse Wheel Up = Cmd + D
-- Cmd + Mouse Wheel Down = Cmd + F
-- Cmd + Mouse Wheel Left = Cmd + G
-- Cmd + Mouse Left = Cmd + H
-- Cmd + Mouse Down = Cmd + J
-- Cmd + Mouse Up = Cmd + K
-- Cmd + Mouse Right = Cmd + L
-- Cmd + Mouse Button 1 = Cmd + T
-- Cmd + Mouse Button 2 = Cmd + Y
-- Cmd + Delete = Cmd + O
-
-### Control Key Overrides:
-- Ctrl + Mouse Left = Ctrl + H
-- Ctrl + Mouse Down = Ctrl + J
-- Ctrl + Mouse Up = Ctrl + K
-- Ctrl + Mouse Right = Ctrl + L
-- Ctrl + Delete = Ctrl + O
-
-### GUI Key Overrides (on NUMBERS layer):
-- Cmd + 7 = Dock (Ctrl + F3)
-- Cmd + 8 = Language Toggle (Ctrl + Space)
-- Cmd + 9 = Delete
-- Cmd + 0 = Backspace
-
----
-
-# SETUP AND INSTALLATION
-
-## Requirements
-- QMK firmware environment
-- macOS (keymap optimized for macOS shortcuts)
-- BetterTouchTool (optional, for screen movement shortcuts)
-- Neovim with Snacks plugin (for Vim commands)
-
-## Building and Flashing
-
-```bash
-# Compile the keymap
-qmk compile -kb keyboardio/atreus -km ryenguyen7411
-
-# Flash to keyboard
-qmk flash -kb keyboardio/atreus -km ryenguyen7411
 ```
 
-## Quick Start Guide
-
-1. **Start typing** - Base layer works like normal QWERTY
-2. **Try mouse control** - Tap MOUSE key, then use M ◀/▼/▲/▶ keys. Hold Shift/Ctrl + MOUSE to disable mouse layer.
-3. **Access numbers** - Hold FN2 for number row
-4. **Use Vim shortcuts** - Hold FN3 for quick Vim commands
-5. **Function keys** - Hold FN4 for F-keys and media controls
-
-*This keymap has a learning curve but significantly improves productivity once mastered.*
+| Key | Does |
+|---|---|
+| Clear | Terminal clear: Ctrl+`, then Ctrl+L |
+| HTML | Copy as HTML (Cmd+Shift+C) |
+| Boot | Reboot into the bootloader for flashing |

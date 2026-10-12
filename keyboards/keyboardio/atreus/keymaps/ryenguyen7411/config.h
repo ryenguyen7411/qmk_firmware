@@ -15,18 +15,17 @@
  */
 #pragma once
 
+// Firmware trimming
 #define NO_ACTION_ONESHOT
-#define NO_ACTION_MACRO
-#define NO_ACTION_FUNCTION
 #define NO_USB_STARTUP_CHECK
 
-// Mouse Keys
+// Mouse keys: MK_COMBINED makes MS_ACL0 a hold-for-slow modifier
 #define MK_COMBINED
 
 #define MOUSEKEY_DELAY 10
 #define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_MOVE_DELTA 4   // first step 4px instead of 8 for finer small moves
-#define MOUSEKEY_MAX_SPEED 14   // top speed = MOVE_DELTA * MAX_SPEED = 56px, same as before
+#define MOUSEKEY_MOVE_DELTA 4   // first step 4px for finer small moves
+#define MOUSEKEY_MAX_SPEED 14   // top speed = MOVE_DELTA * MAX_SPEED = 56px
 #define MOUSEKEY_TIME_TO_MAX 16
 #define MOUSEKEY_OVERLAP_RESET  // restart acceleration when changing direction mid-move
 
@@ -35,7 +34,8 @@
 #define MOUSEKEY_WHEEL_MAX_SPEED 4
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 20
 
-// Tapping Term
+// Tap / hold
 #define TAPPING_TERM 150
 
+// Key overrides
 #define KEY_OVERRIDE_REPEAT_DELAY 15

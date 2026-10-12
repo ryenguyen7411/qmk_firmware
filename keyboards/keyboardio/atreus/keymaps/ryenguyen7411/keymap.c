@@ -17,18 +17,19 @@
 #include QMK_KEYBOARD_H
 
 // =============================================================================
-// LAYER + KEYCODES DEFINITIONS
+// LAYERS & KEYCODES
 // =============================================================================
 
 enum layer_names {
     _BASE,
-    _FN1,
-    _FN2,
-    _FN3,
-    _FN4,
+    _FN1, // mouse + windows
+    _FN2, // numbers + symbols
+    _FN3, // vim / tmux shortcuts
+    _FN4, // F-keys + media
 };
 
 enum custom_keycodes {
+    // Vim / tmux shortcuts (FN3)
     MC_VI01 = SAFE_RANGE,
     MC_VI02,
     MC_VI03,
@@ -41,27 +42,21 @@ enum custom_keycodes {
     MC_VI10,
     MC_VI11,
     MC_VI12,
-    MC_VI99,
+    MC_VI99, // save
 
+    // Window / screen management (FN1)
     SCREEN1,
     SCREEN2,
     PEEK,
     WIN_L,
     WIN_R,
-    CLEAR,
-    MOUSE,
-    MC_RCMD,
-    MC_S10,
-    MC_S11,
-    DRAG,
-};
 
-// =============================================================================
-// TAP DANCE CONFIGURATION
-// =============================================================================
+    // Mouse layer
+    MOUSE,   // turn the mouse layer on (off with Shift/Ctrl)
+    MC_RCMD, // right Cmd, also the digitizer jump modifier
+    DRAG,    // drag lock
 
-enum tap_dances {
-    TD_FN_SCLN,
+    CLEAR, // terminal clear (FN4)
 };
 
 #define FN1 LT(_FN1, KC_SPACE)
@@ -77,29 +72,16 @@ enum tap_dances {
 #define WIDG C(S(KC_Z))
 #define PASTE G(KC_V)
 
+// =============================================================================
+// TAP DANCE
+// =============================================================================
+
+enum tap_dances {
+    TD_FN_SCLN,
+};
+
 #define TD_SCLN TD(TD_FN_SCLN)
 
-// TAP DANCE IMPLEMENTATION
-
-typedef enum { TD_NONE, TD_UNKNOWN, TD_SINGLE_TAP, TD_SINGLE_HOLD, TD_DOUBLE_TAP } td_tap_t;
-
-typedef struct {
-    td_tap_t state;
-} td_state_t;
-
-// static td_state_t td_tap_state = {.state = TD_NONE};
-
-td_tap_t td_get_state(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (!state->pressed)
-            return TD_SINGLE_TAP;
-        else
-            return TD_SINGLE_HOLD;
-    }
-    return TD_DOUBLE_TAP;
-}
-
-// Register tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_FN_SCLN] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
 };
@@ -108,59 +90,47 @@ tap_dance_action_t tap_dance_actions[] = {
 // KEY OVERRIDES
 // =============================================================================
 
-const key_override_t ko_cmd_s  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLR, G(KC_S));
-const key_override_t ko_cmd_d  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLU, G(KC_D));
-const key_override_t ko_cmd_f  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLD, G(KC_F));
-const key_override_t ko_cmd_g  = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLL, G(KC_G));
-const key_override_t ko_cmd_h  = ko_make_basic(MOD_BIT(KC_LCMD), MS_LEFT, G(KC_H));
-const key_override_t ko_cmd_j  = ko_make_basic(MOD_BIT(KC_LCMD), MS_DOWN, G(KC_J));
-const key_override_t ko_cmd_k  = ko_make_basic(MOD_BIT(KC_LCMD), MS_UP, G(KC_K));
-const key_override_t ko_cmd_l  = ko_make_basic(MOD_BIT(KC_LCMD), MS_RGHT, G(KC_L));
-const key_override_t ko_cmd_w  = ko_make_basic(MOD_BIT(KC_LCMD), MS_ACL0, G(KC_W));
-const key_override_t ko_cmd_t  = ko_make_basic(MOD_BIT(KC_LCMD), MS_BTN1, G(KC_T));
-const key_override_t ko_cmd_y  = ko_make_basic(MOD_BIT(KC_LCMD), MS_BTN2, G(KC_Y));
-const key_override_t ko_cmd_o  = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
-const key_override_t ko_ctrl_d = ko_make_basic(MOD_MASK_CTRL, MS_WHLU, C(KC_D));
-const key_override_t ko_ctrl_h = ko_make_basic(MOD_MASK_CTRL, MS_LEFT, C(KC_H));
-const key_override_t ko_ctrl_j = ko_make_basic(MOD_MASK_CTRL, MS_DOWN, C(KC_J));
-const key_override_t ko_ctrl_k = ko_make_basic(MOD_MASK_CTRL, MS_UP, C(KC_K));
-const key_override_t ko_ctrl_l = ko_make_basic(MOD_MASK_CTRL, MS_RGHT, C(KC_L));
-const key_override_t ko_ctrl_o = ko_make_basic(MOD_MASK_CTRL, KC_DEL, C(KC_O));
-const key_override_t ko_cmd_shift_f = ko_make_basic(MOD_MASK_CS, MS_WHLD, C(S(KC_F)));
-const key_override_t ko_7      = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
-const key_override_t ko_8      = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
-const key_override_t ko_9      = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
-const key_override_t ko_0      = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
+// Left Cmd + mouse-layer key sends Cmd + the letter underneath
+const key_override_t ko_cmd_s = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLR, G(KC_S));
+const key_override_t ko_cmd_d = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLU, G(KC_D));
+const key_override_t ko_cmd_f = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLD, G(KC_F));
+const key_override_t ko_cmd_g = ko_make_basic(MOD_BIT(KC_LCMD), MS_WHLL, G(KC_G));
+const key_override_t ko_cmd_h = ko_make_basic(MOD_BIT(KC_LCMD), MS_LEFT, G(KC_H));
+const key_override_t ko_cmd_j = ko_make_basic(MOD_BIT(KC_LCMD), MS_DOWN, G(KC_J));
+const key_override_t ko_cmd_k = ko_make_basic(MOD_BIT(KC_LCMD), MS_UP, G(KC_K));
+const key_override_t ko_cmd_l = ko_make_basic(MOD_BIT(KC_LCMD), MS_RGHT, G(KC_L));
+const key_override_t ko_cmd_w = ko_make_basic(MOD_BIT(KC_LCMD), MS_ACL0, G(KC_W));
+const key_override_t ko_cmd_t = ko_make_basic(MOD_BIT(KC_LCMD), MS_BTN1, G(KC_T));
+const key_override_t ko_cmd_y = ko_make_basic(MOD_BIT(KC_LCMD), MS_BTN2, G(KC_Y));
+const key_override_t ko_cmd_o = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
 
+// Ctrl + mouse-layer key sends Ctrl + the letter underneath
+const key_override_t ko_ctrl_h       = ko_make_basic(MOD_MASK_CTRL, MS_LEFT, C(KC_H));
+const key_override_t ko_ctrl_j       = ko_make_basic(MOD_MASK_CTRL, MS_DOWN, C(KC_J));
+const key_override_t ko_ctrl_k       = ko_make_basic(MOD_MASK_CTRL, MS_UP, C(KC_K));
+const key_override_t ko_ctrl_l       = ko_make_basic(MOD_MASK_CTRL, MS_RGHT, C(KC_L));
+const key_override_t ko_ctrl_o       = ko_make_basic(MOD_MASK_CTRL, KC_DEL, C(KC_O));
+const key_override_t ko_ctrl_shift_f = ko_make_basic(MOD_MASK_CS, MS_WHLD, C(S(KC_F)));
+
+// Either Cmd + 7/8/9/0
+const key_override_t ko_7 = ko_make_basic(MOD_MASK_GUI, KC_7, DOCK);
+const key_override_t ko_8 = ko_make_basic(MOD_MASK_GUI, KC_8, LANG);
+const key_override_t ko_9 = ko_make_basic(MOD_MASK_GUI, KC_9, KC_DEL);
+const key_override_t ko_0 = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
+
+// clang-format off
 const key_override_t *key_overrides[] = {
-    &ko_cmd_s,
-	&ko_cmd_d,
-	&ko_cmd_f,
-	&ko_cmd_g,
-	&ko_cmd_h,
-	&ko_cmd_j,
-	&ko_cmd_k,
-	&ko_cmd_l,
-	&ko_cmd_w,
-	&ko_cmd_t,
-	&ko_cmd_y,
-	&ko_cmd_o,
-	&ko_ctrl_h,
-	&ko_ctrl_j,
-	&ko_ctrl_k,
-	&ko_ctrl_l,
-	&ko_ctrl_o,
-	&ko_cmd_shift_f,
-	&ko_7,
-	&ko_8,
-	&ko_9,
-	&ko_0,
+    &ko_cmd_s, &ko_cmd_d, &ko_cmd_f, &ko_cmd_g, &ko_cmd_h, &ko_cmd_j, &ko_cmd_k, &ko_cmd_l, &ko_cmd_w, &ko_cmd_t, &ko_cmd_y, &ko_cmd_o,
+    &ko_ctrl_h, &ko_ctrl_j, &ko_ctrl_k, &ko_ctrl_l, &ko_ctrl_o, &ko_ctrl_shift_f,
+    &ko_7, &ko_8, &ko_9, &ko_0,
 };
+// clang-format on
 
 // =============================================================================
-// KEYMAP LAYOUTS
+// KEYMAP
 // =============================================================================
 
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
@@ -193,9 +163,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,QK_BOOT,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
 };
+// clang-format on
 
 // =============================================================================
-// GLOBAL STATE & HELPER FUNCTIONS
+// MODIFIER HELPERS
 // =============================================================================
 
 static bool is_lgui_pressed(void) {
@@ -215,7 +186,7 @@ static bool is_ctrl_pressed(void) {
 }
 
 // =============================================================================
-// MOUSE LAYER: DIGITIZER JUMP, DRAG LOCK
+// MOUSE LAYER: DIGITIZER JUMP
 // =============================================================================
 
 // MC_RCMD + a mouse direction key jumps instead of moving: each jump keeps one
@@ -264,6 +235,28 @@ static void handle_jump(uint16_t keycode) {
     digitizer_move_to((jump_x0 + jump_x1) / 2, (jump_y0 + jump_y1) / 2);
 }
 
+// MC_RCMD sends A while left Cmd is held, otherwise right Cmd. Release whatever the
+// press sent, so toggling left Cmd mid-hold can't leave right Cmd stuck down.
+static uint16_t rcmd_sent = KC_NO;
+
+static bool handle_rcmd_key(keyrecord_t *record) {
+    if (record->event.pressed) {
+        rcmd_sent = is_lgui_pressed() ? KC_A : KC_RCMD;
+        if (rcmd_sent == KC_RCMD) {
+            reset_jump();
+        }
+        register_code(rcmd_sent);
+    } else {
+        unregister_code(rcmd_sent);
+        rcmd_sent = KC_NO;
+    }
+    return false;
+}
+
+// =============================================================================
+// MOUSE LAYER: DRAG LOCK, ENTER / EXIT
+// =============================================================================
+
 // DRAG holds the left button down until tapped again, a normal click, or leaving the layer
 static bool is_dragging = false;
 
@@ -285,70 +278,91 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-// =============================================================================
-// KEY PROCESSING HANDLERS
-// =============================================================================
-
-// MC_RCMD sends A while left Cmd is held, otherwise right Cmd. Release whatever the
-// press sent, so toggling left Cmd mid-hold can't leave right Cmd stuck down.
-static uint16_t rcmd_sent = KC_NO;
-
-static bool handle_rcmd_key(keyrecord_t *record) {
-    if (record->event.pressed) {
-        rcmd_sent = is_lgui_pressed() ? KC_A : KC_RCMD;
-        if (rcmd_sent == KC_RCMD) {
-            reset_jump();
+// Keys that leave the mouse layer when pressed, because typing usually follows:
+// ` or Z alone; Ctrl + Z, C or L; left Cmd (alone) + L, F, T or a Space thumb key.
+static bool exits_mouse_layer(uint16_t keycode) {
+    uint8_t mods = get_mods();
+    if (mods == 0) {
+        return keycode == KC_GRV || keycode == KC_Z;
+    }
+    if (mods == MOD_BIT(KC_LCTL) || mods == MOD_BIT(KC_RCTL)) {
+        return keycode == KC_Z || keycode == KC_C || keycode == MS_RGHT;
+    }
+    if (mods == MOD_BIT(KC_LCMD)) {
+        switch (keycode) {
+            case MS_WHLD:
+            case MS_RGHT:
+            case MS_BTN1:
+            case FN1:
+            case FN2:
+            case FN3:
+                return true;
         }
-        register_code(rcmd_sent);
-    } else {
-        unregister_code(rcmd_sent);
-        rcmd_sent = KC_NO;
     }
     return false;
 }
 
+static void handle_mouse_toggle(void) {
+    if (is_shift_pressed() || is_ctrl_pressed()) {
+        layer_off(_FN1);
+    } else {
+        layer_on(_FN1);
+    }
+}
+
+// =============================================================================
+// VIM / TMUX SHORTCUTS
+// =============================================================================
+
+// ESC to normal mode, then <leader> (Space) + key
+static void send_leader(char key) {
+    SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE));
+    send_char(key);
+}
+
 static void handle_vi_command(uint16_t keycode) {
     switch (keycode) {
-        case MC_VI01:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) ";");
+        case MC_VI01: // find files
+            send_leader(';');
             break;
-        case MC_VI02:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "l");
+        case MC_VI02: // projects
+            send_leader('l');
             break;
-        case MC_VI03:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "j");
+        case MC_VI03: // live grep
+            send_leader('j');
             break;
-        case MC_VI04:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "b");
+        case MC_VI04: // buffers
+            send_leader('b');
             break;
-        case MC_VI05:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "'");
+        case MC_VI05: // resume picker
+            send_leader('\'');
             break;
-        case MC_VI06:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "k");
+        case MC_VI06: // file browser
+            send_leader('k');
             break;
-        case MC_VI07:
+        case MC_VI07: // emmet
             SEND_STRING(SS_LCTL("j"));
             break;
-        case MC_VI08:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "r");
+        case MC_VI08: // DiffviewOpen
+            send_leader('r');
             break;
-        case MC_VI09:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "f");
+        case MC_VI09: // DiffviewFileHistory
+            send_leader('f');
             break;
-        case MC_VI10:
-            SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "i");
+        case MC_VI10: // notes
+            send_leader('i');
             break;
-        case MC_VI11:
+        case MC_VI11: // tmux: opencode
             SEND_STRING(SS_LCTL("o"));
             break;
-        case MC_VI12:
+        case MC_VI12: // tmux: cursor
             SEND_STRING(SS_LCTL("p"));
             break;
     }
 }
 
-static bool handle_vi99_command(void) {
+// Save; with left Cmd held it's Cmd+R, with right Cmd held a plain R
+static void handle_vi99_command(void) {
     if (is_lgui_pressed()) {
         SEND_STRING("r");
     } else if (is_rgui_pressed()) {
@@ -357,12 +371,16 @@ static bool handle_vi99_command(void) {
         tap_code16(KC_R);
         set_mods(mods);
     } else {
-        SEND_STRING(SS_TAP(X_ESC) SS_DELAY(50) SS_TAP(X_SPACE) "w");
+        send_leader('w');
     }
-    return false;
 }
 
-static bool handle_utility_command(uint16_t keycode) {
+// =============================================================================
+// WINDOW / SCREEN / TERMINAL SHORTCUTS
+// =============================================================================
+
+// Each key has a left-Cmd/Shift and a right-Cmd variant on top of its default action
+static void handle_utility_command(uint16_t keycode) {
     switch (keycode) {
         case PEEK:
             if (is_lgui_pressed() || is_shift_pressed()) {
@@ -408,21 +426,11 @@ static bool handle_utility_command(uint16_t keycode) {
         case CLEAR:
             SEND_STRING(SS_LCTL("`") SS_DELAY(50) SS_LCTL("l"));
             break;
-        case MOUSE:
-            if (is_shift_pressed() || is_ctrl_pressed()) {
-                layer_off(_FN1);
-            } else {
-                layer_on(_FN1);
-            }
-            break;
-        default:
-            return true;
     }
-    return false;
 }
 
 // =============================================================================
-// MAIN KEY PROCESSING
+// KEY PROCESSING
 // =============================================================================
 
 // MC_RCMD + Enter centres the cursor. Handled before tap/hold resolution so it fires
@@ -445,68 +453,53 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // Turn off FN1 layer when specific keys are pressed
-    if (record->event.pressed) {
-        // Turn off FN1 when ` or z is pressed (only if no modifiers are pressed)
-        if ((keycode == KC_GRV || keycode == KC_Z) && get_mods() == 0) {
-            if (layer_state_is(_FN1)) {
-                layer_off(_FN1);
-            }
-        }
-        // Turn off FN1 layer when Ctrl+Z, Ctrl+C or Ctrl+L is pressed
-        else if ((get_mods() == MOD_BIT(KC_LCTL) || get_mods() == MOD_BIT(KC_RCTL)) && (keycode == KC_Z || keycode == KC_C || keycode == MS_RGHT)) {
-            if (layer_state_is(_FN1)) {
-                layer_off(_FN1);
-            }
-        }
-        // Turn off FN1 layer when Cmd+L or Cmd+F or Cmd+Space is pressed (only with left Cmd alone, no other modifiers)
-        else if ((get_mods() == MOD_BIT(KC_LCMD)) && (keycode == MS_WHLD || keycode == MS_RGHT || keycode == MS_BTN1 || keycode == FN1 || keycode == FN2 || keycode == FN3)) {
-            if (layer_state_is(_FN1)) {
-                layer_off(_FN1);
-            }
-        }
+    if (record->event.pressed && layer_state_is(_FN1) && exits_mouse_layer(keycode)) {
+        layer_off(_FN1);
+    }
+
+    if (keycode == MC_RCMD) {
+        return handle_rcmd_key(record);
+    }
+
+    if (!record->event.pressed) {
+        return true;
     }
 
     switch (keycode) {
-        case MC_RCMD:
-            return handle_rcmd_key(record);
-    }
-
-    if (record->event.pressed) {
-        if (keycode >= MC_VI01 && keycode <= MC_VI12) {
+        case MC_VI01 ... MC_VI12:
             handle_vi_command(keycode);
             return false;
-        }
-
-        switch (keycode) {
-            case MS_LEFT:
-            case MS_DOWN:
-            case MS_UP:
-            case MS_RGHT:
-                // MC_RCMD holds right Cmd; left Cmd keeps its existing HJKL overrides
-                if (is_rgui_pressed()) {
-                    handle_jump(keycode);
-                    return false;
-                }
-                break;
-            case DRAG:
-                handle_drag();
+        case MC_VI99:
+            handle_vi99_command();
+            return false;
+        case MS_LEFT:
+        case MS_DOWN:
+        case MS_UP:
+        case MS_RGHT:
+            // Right Cmd jumps; left Cmd keeps its HJKL overrides
+            if (is_rgui_pressed()) {
+                handle_jump(keycode);
                 return false;
-            case MS_BTN1:
-                // A normal click while drag-locked releases the button, so end the lock too
-                is_dragging = false;
-                break;
-            case MC_VI99:
-                return handle_vi99_command();
-            case PEEK:
-            case WIN_L:
-            case WIN_R:
-            case SCREEN1:
-            case SCREEN2:
-            case CLEAR:
-            case MOUSE:
-                return handle_utility_command(keycode);
-        }
+            }
+            return true;
+        case MS_BTN1:
+            // A normal click while drag-locked releases the button, so end the lock too
+            is_dragging = false;
+            return true;
+        case DRAG:
+            handle_drag();
+            return false;
+        case MOUSE:
+            handle_mouse_toggle();
+            return false;
+        case PEEK:
+        case WIN_L:
+        case WIN_R:
+        case SCREEN1:
+        case SCREEN2:
+        case CLEAR:
+            handle_utility_command(keycode);
+            return false;
     }
     return true;
 }
