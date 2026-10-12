@@ -35,9 +35,6 @@
 #define MOUSEKEY_WHEEL_MAX_SPEED 4
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 20
 
-// Mouse layer
-#define JUMP_SEQUENCE_TIMEOUT 1000  // a jump key pressed after this many ms starts from the whole screen again
-
 // Tapping Term
 #define TAPPING_TERM 150
 

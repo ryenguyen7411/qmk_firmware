@@ -219,18 +219,16 @@ static bool is_ctrl_pressed(void) {
 // =============================================================================
 
 // MC_RCMD + a mouse direction key jumps instead of moving: each jump keeps one
-// half of the current region and places the cursor at its centre. Jumping after
-// JUMP_SEQUENCE_TIMEOUT starts over from the whole screen.
-static float    jump_x0 = 0, jump_x1 = 1, jump_y0 = 0, jump_y1 = 1;
-static uint32_t jump_timer = 0;
+// half of the current region and places the cursor at its centre. Each fresh
+// MC_RCMD press starts over from the whole screen.
+static float jump_x0 = 0, jump_x1 = 1, jump_y0 = 0, jump_y1 = 1;
+
+static void reset_jump(void) {
+    jump_x0 = jump_y0 = 0;
+    jump_x1 = jump_y1 = 1;
+}
 
 static void handle_jump(uint16_t keycode) {
-    if (timer_elapsed32(jump_timer) > JUMP_SEQUENCE_TIMEOUT) {
-        jump_x0 = jump_y0 = 0;
-        jump_x1 = jump_y1 = 1;
-    }
-    jump_timer = timer_read32();
-
     float mid_x = (jump_x0 + jump_x1) / 2;
     float mid_y = (jump_y0 + jump_y1) / 2;
     switch (keycode) {
@@ -282,22 +280,22 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // KEY PROCESSING HANDLERS
 // =============================================================================
 
+// MC_RCMD sends A while left Cmd is held, otherwise right Cmd. Release whatever the
+// press sent, so toggling left Cmd mid-hold can't leave right Cmd stuck down.
+static uint16_t rcmd_sent = KC_NO;
+
 static bool handle_rcmd_key(keyrecord_t *record) {
-    if (is_lgui_pressed()) {
-        if (record->event.pressed) {
-            register_code(KC_A);
-        } else {
-            unregister_code(KC_A);
+    if (record->event.pressed) {
+        rcmd_sent = is_lgui_pressed() ? KC_A : KC_RCMD;
+        if (rcmd_sent == KC_RCMD) {
+            reset_jump();
         }
-        return false;
+        register_code(rcmd_sent);
     } else {
-        if (record->event.pressed) {
-            register_code(KC_RCMD);
-        } else {
-            unregister_code(KC_RCMD);
-        }
+        unregister_code(rcmd_sent);
+        rcmd_sent = KC_NO;
     }
-    return true;
+    return false;
 }
 
 static void handle_vi_command(uint16_t keycode) {
