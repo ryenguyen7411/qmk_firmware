@@ -220,12 +220,27 @@ static bool is_ctrl_pressed(void) {
 
 // MC_RCMD + a mouse direction key jumps instead of moving: each jump keeps one
 // half of the current region and places the cursor at its centre. Each fresh
-// MC_RCMD press starts over from the whole screen.
+// MC_RCMD press, or MC_RCMD + Enter (centre), starts over from the whole screen.
 static float jump_x0 = 0, jump_x1 = 1, jump_y0 = 0, jump_y1 = 1;
 
 static void reset_jump(void) {
     jump_x0 = jump_y0 = 0;
     jump_x1 = jump_y1 = 1;
+}
+
+static void digitizer_move_to(float x, float y) {
+    // Set position and in-range together so the cursor doesn't flick to the old spot first
+    digitizer_state.x        = x;
+    digitizer_state.y        = y;
+    digitizer_state.in_range = true;
+    digitizer_state.dirty    = true;
+    digitizer_flush();
+    digitizer_in_range_off();
+}
+
+static void handle_center(void) {
+    reset_jump();
+    digitizer_move_to(0.5f, 0.5f);
 }
 
 static void handle_jump(uint16_t keycode) {
@@ -246,13 +261,7 @@ static void handle_jump(uint16_t keycode) {
             break;
     }
 
-    // Set position and in-range together so the cursor doesn't flick to the old spot first
-    digitizer_state.x        = (jump_x0 + jump_x1) / 2;
-    digitizer_state.y        = (jump_y0 + jump_y1) / 2;
-    digitizer_state.in_range = true;
-    digitizer_state.dirty    = true;
-    digitizer_flush();
-    digitizer_in_range_off();
+    digitizer_move_to((jump_x0 + jump_x1) / 2, (jump_y0 + jump_y1) / 2);
 }
 
 // DRAG holds the left button down until tapped again, a normal click, or leaving the layer
@@ -415,6 +424,25 @@ static bool handle_utility_command(uint16_t keycode) {
 // =============================================================================
 // MAIN KEY PROCESSING
 // =============================================================================
+
+// MC_RCMD + Enter centres the cursor. Handled before tap/hold resolution so it fires
+// on press, and the matching release is swallowed so Enter/FN4 never sees either.
+static bool is_centering = false;
+
+bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == FN4) {
+        if (record->event.pressed && is_rgui_pressed()) {
+            is_centering = true;
+            handle_center();
+            return false;
+        }
+        if (!record->event.pressed && is_centering) {
+            is_centering = false;
+            return false;
+        }
+    }
+    return true;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Turn off FN1 layer when specific keys are pressed
