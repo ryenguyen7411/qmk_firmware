@@ -52,9 +52,11 @@ enum custom_keycodes {
     WIN_R,
 
     // Mouse layer
-    MOUSE,   // turn the mouse layer on (off with Shift/Ctrl)
-    MC_RCMD, // right Cmd, also the digitizer jump modifier
-    DRAG,    // drag lock
+    MOUSE,     // turn the mouse layer on (off with Shift/Ctrl)
+    MOUSEON,  // turn the mouse layer on (FN3)
+    MOUSEOF, // turn the mouse layer off (FN3)
+    MC_RCMD,   // right Cmd, also the digitizer jump modifier
+    DRAG,      // drag lock
 
     CLEAR, // terminal clear (FN4)
 };
@@ -139,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
   [_FN1] = LAYOUT(
-    _______,MS_ACL0,WIDG,   MC_VI99,MS_BTN1,                MS_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
+    MOUSEOF,MS_ACL0,WIDG,   MC_VI99,MS_BTN1,                MS_BTN2,DOCK,   LANG,   KC_DEL, KC_BSPC,
     MC_RCMD,MS_WHLR,MS_WHLU,MS_WHLD,MS_WHLL,                MS_LEFT,MS_DOWN,MS_UP,  MS_RGHT,_______,
     _______,_______,_______,_______,_______,DRAG,   _______,SCREEN1,PEEK,   WIN_L,  WIN_R,  SCREEN2,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -151,8 +153,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
-    _______,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI11,MC_VI12,
-    _______,_______,_______,_______,MC_VI09,                _______,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
+    MOUSEOF,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI11,MC_VI12,
+    _______,_______,_______,_______,MC_VI09,                MOUSEON,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
     _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
@@ -491,6 +493,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case MOUSE:
             handle_mouse_toggle();
+            return false;
+        case MOUSEON:
+            layer_on(_FN1);
+            return false;
+        case MOUSEOF:
+            layer_off(_FN1);
             return false;
         case PEEK:
         case WIN_L:

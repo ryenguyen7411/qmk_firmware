@@ -163,9 +163,9 @@ Right Cmd + M ◀ ▼ ▲ ▶ is a [cursor jump](#cursor-jumps), not Cmd+H/J/K/L
 
 ```
 .-----------------------------.           .-----------------------------.
-|     |     |Emmet|Diff |     |           |Resum|     |Notes|OpenC|Curs |
+|     |M_OF |Emmet|Diff |     |           |Resum|     |Notes|OpenC|Curs |
 |-----------------------------|           |-----------------------------|
-|     |     |     |     |FHist|           |     |Grep |Brows|Proj |Files|
+|M_ON |     |     |     |FHist|           |     |Grep |Brows|Proj |Files|
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |Bufs |     |     |     |Paste|
 |-----------------------------------------------------------------------|
@@ -190,6 +190,8 @@ Most keys send Esc, then `<leader>` (Space) + a key:
 | OpenC | Ctrl+O | tmux: Opencode |
 | Curs | Ctrl+P | tmux: Cursor |
 | Paste | Cmd+V | |
+| M_OF | | Turn off the mouse layer |
+| M_ON | | Turn on the mouse layer |
 
 ---
 
