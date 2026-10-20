@@ -32,7 +32,7 @@ Blank cells in the diagrams fall through to the base layer.
 |-----------------------------|           |-----------------------------|
 |  A  |  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
 |-----------------------------------------------------------------------|
-|ShEsc|  Z  |  X  |  C  |  V  |     |MOUSE|  B  |  N  |  M  |     |CtEsc|
+|ShEsc|  Z  |  X  |  C  |  V  |DRAG |MOUSE|  B  |  N  |  M  |     |CtEsc|
 |-----------------------------------------------------------------------|
 |Ctrl |     | Opt | Cmd |xxxxx| FN2 | FN1 | FN3 |  ◀  |  ▼  |  ▲  |  ▶  |
 '-----------------------------------------------------------------------'
@@ -45,6 +45,7 @@ Blank cells in the diagrams fall through to the base layer.
 | FN1 / FN2 / FN3 | Space | Layer FN1 / FN2 / FN3 |
 | FN4 | Enter | Layer FN4 |
 | MOUSE | Mouse layer on (stays on) | — |
+| DRAG | Mouse layer on + [drag lock](#drag-lock) | — |
 | Shift/Ctrl + MOUSE | Mouse layer off | — |
 
 `xxxxx` is a dead switch.
@@ -59,7 +60,7 @@ Blank cells in the diagrams fall through to the base layer.
 |-----------------------------|           |-----------------------------|
 |RCmd |Whl ▶|Whl ▲|Whl ▼|Whl ◀|           | M ◀ | M ▼ | M ▲ | M ▶ |Enter|
 |-----------------------------------------------------------------------|
-|     |     |     |     |     |DRAG |     |Scr1 |Peek |Win ◀|Win ▶|Scr2 |
+|     |     |     |     |     |     |     |Scr1 |Peek |Win ◀|Win ▶|Scr2 |
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |     |     |     |     |     |
 '-----------------------------------------------------------------------'
@@ -100,7 +101,9 @@ normally the main one.
 ### Drag lock
 
 **DRAG** holds the left button down so you can move the cursor (or jump) while dragging.
-It lets go when you press DRAG again, click Clk L, or leave the mouse layer.
+DRAG sits in the same spot on BASE and FN1; on BASE it also turns the mouse layer on.
+It lets go when you press DRAG again, click Clk L, tap Esc, or leave the mouse layer.
+Esc reaches macOS while the button is still down, so it cancels the drag rather than dropping.
 
 ### Leaving the mouse layer
 
@@ -132,6 +135,11 @@ With **left** Cmd or Ctrl held, mouse keys send the letter printed underneath in
 | Left Cmd | Del (not with Shift) | Cmd+O |
 | Ctrl | M ◀ ▼ ▲ ▶, Del | Ctrl + H J K L, O |
 | Ctrl+Shift | Whl ▼ | Ctrl+Shift+F |
+
+Ctrl + the other wheel keys stays Ctrl + scroll, for zoom in maps and Figma.
+
+The mod has to go down first. Press the mouse key first and then Cmd/Ctrl to get the real
+modified mouse action (e.g. hold M ▶, then Cmd, to move with Cmd held).
 
 Right Cmd + M ◀ ▼ ▲ ▶ is a [cursor jump](#cursor-jumps), not Cmd+H/J/K/L.
 
