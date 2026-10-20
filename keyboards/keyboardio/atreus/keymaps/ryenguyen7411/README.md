@@ -30,7 +30,7 @@ Blank cells in the diagrams fall through to the base layer.
 .-----------------------------.           .-----------------------------.
 |  Q  |  W  |  E  |  R  |  T  |           |  Y  |  U  |  I  |  O  |  P  |
 |-----------------------------|           |-----------------------------|
-|  A  |  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
+|A/RCm|  S  |  D  |  F  |  G  |           |  H  |  J  |  K  |  L  | FN4 |
 |-----------------------------------------------------------------------|
 |ShEsc|  Z  |  X  |  C  |  V  |DRAG |MOUSE|  B  |  N  |  M  |     |CtEsc|
 |-----------------------------------------------------------------------|
@@ -40,6 +40,7 @@ Blank cells in the diagrams fall through to the base layer.
 
 | Key | Tap | Hold |
 |---|---|---|
+| A/RCm | A | Right Cmd + layer FN1, for [cursor jumps](#cursor-jumps) from BASE. Press any key during the hold and FN1 stays on after you let go |
 | ShEsc | Esc | Left Shift |
 | CtEsc | Esc | Right Ctrl |
 | FN1 / FN2 / FN3 | Space | Layer FN1 / FN2 / FN3 |
@@ -84,7 +85,8 @@ Blank cells in the diagrams fall through to the base layer.
 
 ### Cursor jumps
 
-Hold **RCmd**, then press M ◀ ▼ ▲ ▶ (H J K L). Each press keeps that half of the
+Hold **RCmd** (or hold A on BASE, which also turns FN1 on), then press M ◀ ▼ ▲ ▶
+(H J K L). Each press keeps that half of the
 current area and puts the cursor in its middle:
 
 | While holding RCmd | Cursor at (x, y) |
