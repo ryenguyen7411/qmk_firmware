@@ -36,7 +36,6 @@ enum custom_keycodes {
     MC_VI04,
     MC_VI05,
     MC_VI06,
-    MC_VI07,
     MC_VI08,
     MC_VI09,
     MC_VI10,
@@ -160,7 +159,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
   ),
   [_FN3] = LAYOUT(
-    _______,_______,MC_VI07,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI11,MC_VI12,
+    _______,_______,_______,MC_VI08,_______,                MC_VI05,_______,MC_VI10,MC_VI11,MC_VI12,
     _______,_______,_______,MOUSEOF,MC_VI09,                MOUSEON,MC_VI03,MC_VI06,MC_VI02,MC_VI01,
     _______,_______,_______,_______,_______,_______,_______,MC_VI04,_______,_______,_______,PASTE,
     _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______
@@ -370,9 +369,6 @@ static void handle_vi_command(uint16_t keycode) {
         case MC_VI06: // file browser
             send_leader('k');
             break;
-        case MC_VI07: // emmet
-            SEND_STRING(SS_LCTL("j"));
-            break;
         case MC_VI08: // DiffviewOpen
             send_leader('r');
             break;
@@ -527,6 +523,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     switch (keycode) {
         case MC_VI01 ... MC_VI12:
+            // Neovim / tmux shortcuts mean typing next, so leave the mouse layer
+            layer_off(_FN1);
             handle_vi_command(keycode);
             return false;
         case MC_VI99:

@@ -173,9 +173,9 @@ Right Cmd + M ◀ ▼ ▲ ▶ is a [cursor jump](#cursor-jumps), not Cmd+H/J/K/L
 
 ```
 .-----------------------------.           .-----------------------------.
-|     |M_OF |Emmet|Diff |     |           |Resum|     |Notes|OpenC|Curs |
+|     |     |     |Diff |     |           |Resum|     |Notes|OpenC|Curs |
 |-----------------------------|           |-----------------------------|
-|M_ON |     |     |     |FHist|           |     |Grep |Brows|Proj |Files|
+|     |     |     |M_OF |FHist|           |M_ON |Grep |Brows|Proj |Files|
 |-----------------------------------------------------------------------|
 |     |     |     |     |     |     |     |Bufs |     |     |     |Paste|
 |-----------------------------------------------------------------------|
@@ -183,7 +183,7 @@ Right Cmd + M ◀ ▼ ▲ ▶ is a [cursor jump](#cursor-jumps), not Cmd+H/J/K/L
 '-----------------------------------------------------------------------'
 ```
 
-Most keys send Esc, then `<leader>` (Space) + a key:
+Most keys send Esc, then `<leader>` (Space) + a key. All of them except Paste also turn the mouse layer off:
 
 | Key | Sends | Neovim action |
 |---|---|---|
@@ -196,7 +196,6 @@ Most keys send Esc, then `<leader>` (Space) + a key:
 | Diff | `<leader>r` | DiffviewOpen |
 | FHist | `<leader>f` | DiffviewFileHistory |
 | Notes | `<leader>i` | Notes |
-| Emmet | Ctrl+J | Emmet expand |
 | OpenC | Ctrl+O | tmux: Opencode |
 | Curs | Ctrl+P | tmux: Cursor |
 | Paste | Cmd+V | |
