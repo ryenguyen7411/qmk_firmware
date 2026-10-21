@@ -112,9 +112,11 @@ Esc reaches macOS while the button is still down, so it cancels the drag rather 
 The layer turns itself off when you press keys that usually mean you're about to type:
 
 - `` ` `` or Z with no modifiers
+- @ (Shift + 2), which starts an @-mention
 - Ctrl + Z, C or L
 - Left Cmd (and nothing else) + L, F, T, or any Space key
 - Shift/Ctrl + MOUSE
+- The FN3 Neovim / tmux keys (not Paste)
 
 ### Modifier variants
 

@@ -308,11 +308,14 @@ static bool is_esc_tap(uint16_t keycode, keyrecord_t *record) {
 }
 
 // Keys that leave the mouse layer when pressed, because typing usually follows:
-// ` or Z alone; Ctrl + Z, C or L; left Cmd (alone) + L, F, T or a Space thumb key.
+// ` or Z alone; @ (Shift + 2, for @-mentions); Ctrl + Z, C or L; left Cmd (alone) + L, F, T or a Space thumb key.
 static bool exits_mouse_layer(uint16_t keycode) {
     uint8_t mods = get_mods();
     if (mods == 0) {
         return keycode == KC_GRV || keycode == KC_Z;
+    }
+    if (mods == MOD_BIT(KC_LSFT) || mods == MOD_BIT(KC_RSFT)) {
+        return keycode == KC_2;
     }
     if (mods == MOD_BIT(KC_LCTL) || mods == MOD_BIT(KC_RCTL)) {
         return keycode == KC_Z || keycode == KC_C || keycode == MS_RGHT;
