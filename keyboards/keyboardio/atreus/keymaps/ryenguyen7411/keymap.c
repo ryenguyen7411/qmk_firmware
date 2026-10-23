@@ -64,7 +64,6 @@ enum custom_keycodes {
 #define FN2 LT(_FN2, KC_SPACE)
 #define FN3 LT(_FN3, KC_SPACE)
 #define FN4 LT(_FN4, KC_ENTER)
-#define A_RCMD LT(_FN1, KC_A) // hold: right Cmd + mouse layer, for cursor jumps
 
 #define SHFTESC LSFT_T(KC_ESC)
 #define CTRLESC RCTL_T(KC_ESC)
@@ -142,7 +141,7 @@ const key_override_t *key_overrides[] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
     KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,
-    A_RCMD, KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
+    KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                   KC_H,   KC_J,   KC_K,   KC_L,   FN4,
     SHFTESC,KC_Z,   KC_X,   KC_C,   KC_V,   DRAG,   MOUSE,  KC_B,   KC_N,   KC_M,   _______,CTRLESC,
     KC_LCTL,_______,KC_LOPT,KC_LCMD,_______,FN2,    FN1,    FN3,    KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
   ),
@@ -466,29 +465,7 @@ static void handle_utility_command(uint16_t keycode) {
 // on press, and the matching release is swallowed so Enter/FN4 never sees either.
 static bool is_centering = false;
 
-// Holding A adds right Cmd on top of the layer the LT turns on. If another key was pressed
-// during the hold, FN1 stays on after A is released (as if MOUSE was tapped); if not, it goes off.
-static bool is_a_held = false;
-static bool is_a_used = false;
-
-static bool handle_a_rcmd_hold(keyrecord_t *record) {
-    if (record->event.pressed) {
-        is_a_held = true;
-        is_a_used = false;
-        reset_jump();
-        register_mods(MOD_BIT(KC_RGUI));
-        return true;
-    }
-    is_a_held = false;
-    unregister_mods(MOD_BIT(KC_RGUI));
-    // Skipping the LT release skips its layer_off
-    return !is_a_used;
-}
-
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (is_a_held && record->event.pressed && keycode != A_RCMD) {
-        is_a_used = true;
-    }
     if (keycode == FN4) {
         if (record->event.pressed && is_rgui_pressed()) {
             is_centering = true;
@@ -510,10 +487,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (keycode == MC_RCMD) {
         return handle_rcmd_key(record);
-    }
-
-    if (keycode == A_RCMD && record->tap.count == 0) {
-        return handle_a_rcmd_hold(record);
     }
 
     if (!record->event.pressed && is_dragging && is_esc_tap(keycode, record)) {
