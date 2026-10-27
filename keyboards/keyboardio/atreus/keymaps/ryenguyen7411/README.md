@@ -133,7 +133,7 @@ With **left** Cmd or Ctrl held, mouse keys send the letter printed underneath in
 
 | Held | Keys | Sends |
 |---|---|---|
-| Left Cmd | Slow, Whl ▶ ▲ ▼ ◀, Clk L, Clk R, M ◀ ▼ ▲ ▶ | Cmd + W, S D F G, T, Y, H J K L |
+| Left Cmd | Slow, Whl ▶ ▲ ▼ ◀, Clk L, Clk R, Dock, Lang, M ◀ ▼ ▲ ▶ | Cmd + W, S D F G, T, Y, U, I, H J K L |
 | Left Cmd | Del (not with Shift) | Cmd+O |
 | Ctrl | M ◀ ▼ ▲ ▶, Del | Ctrl + H J K L, O |
 | Ctrl+Shift | Whl ▼ | Ctrl+Shift+F |

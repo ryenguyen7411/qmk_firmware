@@ -108,6 +108,8 @@ const key_override_t ko_cmd_l = ko_make_mouse(MOD_BIT(KC_LCMD), MS_RGHT, G(KC_L)
 const key_override_t ko_cmd_w = ko_make_mouse(MOD_BIT(KC_LCMD), MS_ACL0, G(KC_W));
 const key_override_t ko_cmd_t = ko_make_mouse(MOD_BIT(KC_LCMD), MS_BTN1, G(KC_T));
 const key_override_t ko_cmd_y = ko_make_mouse(MOD_BIT(KC_LCMD), MS_BTN2, G(KC_Y));
+const key_override_t ko_cmd_u = ko_make_mouse(MOD_BIT(KC_LCMD), DOCK, G(KC_U));
+const key_override_t ko_cmd_i = ko_make_mouse(MOD_BIT(KC_LCMD), LANG, G(KC_I));
 const key_override_t ko_cmd_o = ko_make_with_layers_and_negmods(MOD_BIT(KC_LCMD), KC_DEL, G(KC_O), ~0, MOD_MASK_SHIFT);
 
 // Ctrl + mouse-layer key sends Ctrl + the letter underneath. Ctrl + wheel keys stay
@@ -127,7 +129,7 @@ const key_override_t ko_0 = ko_make_basic(MOD_MASK_GUI, KC_0, KC_BSPC);
 
 // clang-format off
 const key_override_t *key_overrides[] = {
-    &ko_cmd_s, &ko_cmd_d, &ko_cmd_f, &ko_cmd_g, &ko_cmd_h, &ko_cmd_j, &ko_cmd_k, &ko_cmd_l, &ko_cmd_w, &ko_cmd_t, &ko_cmd_y, &ko_cmd_o,
+    &ko_cmd_s, &ko_cmd_d, &ko_cmd_f, &ko_cmd_g, &ko_cmd_h, &ko_cmd_j, &ko_cmd_k, &ko_cmd_l, &ko_cmd_w, &ko_cmd_t, &ko_cmd_y, &ko_cmd_u, &ko_cmd_i, &ko_cmd_o,
     &ko_ctrl_h, &ko_ctrl_j, &ko_ctrl_k, &ko_ctrl_l, &ko_ctrl_o, &ko_ctrl_shift_f,
     &ko_7, &ko_8, &ko_9, &ko_0,
 };
